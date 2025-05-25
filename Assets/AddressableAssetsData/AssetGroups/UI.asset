@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: UI
+  m_EditorClassIdentifier: 
+  m_GroupName: UI
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 1aece37d577eee54bad47afdfbc63499
+  m_SerializeEntries:
+  - m_GUID: 0cdb28206d16cba4fbfee760b4261cde
+    m_Address: Screens/BootView
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Screens
+  - m_GUID: 77a40495b69721c4dad04db18bd9b915
+    m_Address: Screens/SplashView
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Screens
+  - m_GUID: 54a80fdd0d6927d458d295f1db44000c
+    m_Address: Screens/LoginView
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Screens
+  - m_GUID: ff44280ee0c8495479c6b7639a8c5514
+    m_Address: Screens/RegisterView
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Screens
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 71e42ca6e7e044f42817e41a462a5d3f, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: ac3f01b9d15391e4590e103bb2efa5ed, type: 2}
+    - {fileID: 11400000, guid: efe04c1cc3b04e14d8bb26d9c0b23720, type: 2}

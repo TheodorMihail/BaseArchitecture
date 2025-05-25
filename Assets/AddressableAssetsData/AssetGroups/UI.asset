@@ -22,21 +22,31 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - Screens
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 77a40495b69721c4dad04db18bd9b915
     m_Address: Screens/SplashView
     m_ReadOnly: 0
     m_SerializedLabels:
     - Screens
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 54a80fdd0d6927d458d295f1db44000c
     m_Address: Screens/LoginView
     m_ReadOnly: 0
     m_SerializedLabels:
     - Screens
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ff44280ee0c8495479c6b7639a8c5514
     m_Address: Screens/RegisterView
     m_ReadOnly: 0
     m_SerializedLabels:
     - Screens
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 44835c98a3ac80943b4a929e49818778
+    m_Address: Screens/MenuView
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Screens
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 71e42ca6e7e044f42817e41a462a5d3f, type: 2}
   m_SchemaSet:

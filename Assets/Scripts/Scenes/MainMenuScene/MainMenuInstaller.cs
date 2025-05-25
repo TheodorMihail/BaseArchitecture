@@ -26,7 +26,7 @@ namespace Base.Scenes.MainMenu
         private void StateMachineInstall()
         {
             Container.BindInterfacesTo<AuthenticationState>().AsSingle();
-            Container.BindInterfacesTo<CharactersState>().AsSingle();
+            Container.BindInterfacesTo<MenuState>().AsSingle();
             Container.BindInterfacesTo<MainMenuStateMachine>().AsSingle();
         }
     }

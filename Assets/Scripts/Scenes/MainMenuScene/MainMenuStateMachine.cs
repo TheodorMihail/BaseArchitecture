@@ -2,6 +2,7 @@ using Base.Project;
 using Base.Systems;
 using System.Collections.Generic;
 using static Base.Scenes.MainMenu.MainMenuStateMachine;
+using static Base.Scenes.MainMenu.MenuScreen;
 
 namespace Base.Scenes.MainMenu
 {
@@ -10,7 +11,7 @@ namespace Base.Scenes.MainMenu
         public enum MainMenuStateIds
         {
             Authentication,
-            Characters
+            Menu
         }
 
         protected override MainMenuStateIds DefaultStateId => MainMenuStateIds.Authentication;
@@ -28,17 +29,19 @@ namespace Base.Scenes.MainMenu
             switch (finishedState.stateId)
             {
                 case MainMenuStateIds.Authentication:
-                    SetState(MainMenuStateIds.Characters);
+                    SetState(MainMenuStateIds.Menu);
                     break;
-                case MainMenuStateIds.Characters:
-                    if(finishedState.paramsList.Length == 0)
+                case MainMenuStateIds.Menu:
+                    MenuScreenResult result = (MenuScreenResult)finishedState.paramsList[0];
+                    
+                    if(result.State == ResultType.MapSelectionCanceled)
                     {
                         SetState(MainMenuStateIds.Authentication);
+                        return;
                     }
-                    else
-                    {
-                        _scenesManager.LoadScene(ScenesManager.SceneType.Game.ToString());
-                    }
+
+                    _scenesManager.LoadScene(ScenesManager.SceneType.Game.ToString());
+
                     break;
             }
         }

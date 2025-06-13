@@ -2,7 +2,7 @@ using Base.Systems;
 using Cysharp.Threading.Tasks;
 using System.Threading;
 
-namespace Base.Scenes.Preload
+namespace Base.Scenes.GamePreload
 {
     public class SplashController : Controller<SplashScreen, SplashModel, SplashView>
     {

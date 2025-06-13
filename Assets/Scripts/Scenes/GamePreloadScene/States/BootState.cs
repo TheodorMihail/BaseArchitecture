@@ -1,12 +1,12 @@
 using Base.Project;
 using Base.Systems;
-using static Base.Scenes.Preload.PreloadStateMachine;
+using static Base.Scenes.GamePreload.GamePreloadStateMachine;
 
-namespace Base.Scenes.Preload
+namespace Base.Scenes.GamePreload
 {
-    public class BootState : BaseState<PreloadStateIds>
+    public class BootState : BaseState<GamePreloadStateIds>
     {
-        public override PreloadStateIds Id => PreloadStateIds.BootState;
+        public override GamePreloadStateIds Id => GamePreloadStateIds.BootState;
 
         private readonly IUIManager _uiManager;
 

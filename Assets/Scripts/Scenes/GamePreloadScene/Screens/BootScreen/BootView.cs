@@ -5,7 +5,7 @@ using System.Threading;
 using TMPro;
 using UnityEngine;
 
-namespace Base.Scenes.Preload
+namespace Base.Scenes.GamePreload
 {
     [AddressablePath("Screens/BootView")]
     public class BootView : View

@@ -19,7 +19,7 @@ namespace Base.Project
     {
         public enum SceneType
         {
-            Preload,
+            GamePreload,
             MainMenu,
             Game
         }

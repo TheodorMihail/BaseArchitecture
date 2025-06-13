@@ -3,9 +3,9 @@ using Base.Systems;
 using UnityEngine;
 using Zenject;
 
-namespace Base.Scenes.Preload
+namespace Base.Scenes.GamePreload
 {
-    public class PreloadInstaller : MonoInstaller
+    public class GamePreloadInstaller : MonoInstaller
     {
         public Transform ScreensContainer;
 
@@ -27,7 +27,7 @@ namespace Base.Scenes.Preload
         {
             Container.BindInterfacesTo<BootState>().AsSingle();
             Container.BindInterfacesTo<SplashState>().AsSingle();
-            Container.BindInterfacesTo<PreloadStateMachine>().AsSingle();
+            Container.BindInterfacesTo<GamePreloadStateMachine>().AsSingle();
         }
     }
 }

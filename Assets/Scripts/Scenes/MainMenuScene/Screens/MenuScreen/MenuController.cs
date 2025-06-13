@@ -1,5 +1,6 @@
 using Base.Project;
 using Base.Systems;
+using System.Collections.Generic;
 using static Base.Scenes.MainMenu.MenuScreen;
 
 namespace Base.Scenes.MainMenu
@@ -7,6 +8,7 @@ namespace Base.Scenes.MainMenu
     public class MenuController : Controller<MenuScreen, MenuModel, MenuView, MenuScreenResult>
     {
         private IAuthenticationManager _authenticationManager;
+        private List<string> _mapData = new List<string>() { "1", "2" };
 
         public MenuController(MenuScreen menuScreen, MenuModel model, MenuView view,
             IAuthenticationManager authenticationManager)
@@ -20,6 +22,7 @@ namespace Base.Scenes.MainMenu
             base.Initialize();
             _view.OnMapSelectedBtnPressed += OnMapSelectedBtnPressed;
             _view.OnMapSelectionCanceledBtnPressed += OnMapSelectionCanceledBtnPressed;
+            _view.SetupMaps(_mapData);
         }
 
         public override void Dispose()

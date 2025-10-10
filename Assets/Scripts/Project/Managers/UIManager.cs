@@ -8,9 +8,9 @@ using IFactory = Base.Systems.IFactory;
 namespace Base.Project
 {
     /// <summary>
-    /// Manages UI screen lifecycle and presentation. Screens are created, displayed, and awaited until closed.
-    /// Supports screens with return values for capturing user input or decisions.
-    /// Call UpdateDIContainer() in scene installers to enable screen instantiation in that scene context.
+    /// Manages UI screen lifecycle and presentation.
+    /// Supports screens with return values and typed parameters.
+    /// Update the DI container in scene installers to enable screen instantiation in that context.
     /// </summary>
     public interface IUIManager : IInitializable, IDisposable
     {
@@ -18,7 +18,7 @@ namespace Base.Project
         UniTask ShowScreen<T>() where T : IScreen;
 
         /// <summary>
-        /// Shows a screen and awaits its result. The returned task completes when the screen closes.
+        /// Shows a screen and returns its result when closed.
         /// </summary>
         UniTask<TResult> ShowScreen<T, TResult>()
             where T : IScreenWithResult<TResult>

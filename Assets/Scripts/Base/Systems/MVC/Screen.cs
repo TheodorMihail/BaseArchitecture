@@ -31,7 +31,7 @@ namespace Base.Systems
 
     /// <summary>
     /// Screen interface that supports receiving typed parameters.
-    /// Parameters are set before screen initialization via SetParameter().
+    /// Parameters are set before initialization.
     /// </summary>
     public interface IScreenWithParams<TParam> : IScreen
         where TParam : IScreenParam
@@ -53,7 +53,7 @@ namespace Base.Systems
 
     /// <summary>
     /// Base Screen class that automatically creates and manages Model, View, and Controller.
-    /// Loads View prefab from Addressables using the AddressablePathAttribute on the View class.
+    /// View prefabs are loaded using the AddressablePathAttribute on the View class.
     /// Provides async/await support for handling UI flows and state transitions.
     /// </summary>
     public abstract class Screen<M, V, C> : IScreen
@@ -101,7 +101,7 @@ namespace Base.Systems
         }
 
         /// <summary>
-        /// Creates Model, View, and Controller instances. View prefab is loaded from Addressables.
+        /// Creates Model, View, and Controller instances with automatic prefab loading.
         /// </summary>
         protected async UniTask CreateMVC()
         {
@@ -131,8 +131,8 @@ namespace Base.Systems
         }
 
         /// <summary>
-        /// Called after Model, View, and Controller are created.
-        /// Override to initialize the Model with parameters or set up initial screen state.
+        /// Called after MVC components are created and ready.
+        /// Override to perform custom initialization logic.
         /// </summary>
         protected virtual void MVCCreated()
         {
@@ -147,7 +147,7 @@ namespace Base.Systems
 
     /// <summary>
     /// Screen variant that supports returning a result when closed.
-    /// The result can be retrieved by awaiting ShowScreen in the UIManager.
+    /// The result can be retrieved by awaiting the screen display operation.
     /// </summary>
     public abstract class ScreenWithResult<M, V, C, TResult> : Screen<M, V, C>, IScreenWithResult<TResult>
         where M : IModel
@@ -170,8 +170,7 @@ namespace Base.Systems
 
     /// <summary>
     /// Screen variant that accepts typed input parameters.
-    /// Parameters are set via UIManager before initialization.
-    /// Use MVCCreated() to transfer parameters to the Model.
+    /// Parameters are automatically passed to the Model if it supports parameter initialization.
     /// </summary>
     public abstract class ScreenWithParams<M, V, C, TParam> : Screen<M, V, C>, IScreenWithParams<TParam>
         where M : IModel
@@ -190,11 +189,22 @@ namespace Base.Systems
         {
             _parameter = parameter;
         }
+
+        protected override void MVCCreated()
+        {
+            base.MVCCreated();
+
+            // Automatically initialize model with parameters if it supports them
+            if (_model is IModelWithParams<TParam> modelWithParams)
+            {
+                modelWithParams.InitializeWithParameters(_parameter);
+            }
+        }
     }
 
     /// <summary>
     /// Screen variant that supports both typed parameters and returning a result.
-    /// Combines parameter input with result output capabilities.
+    /// Parameters are automatically passed to the Model if it supports parameter initialization.
     /// </summary>
     public abstract class ScreenWithParamsAndResult<M, V, C, TParam, TResult> : Screen<M, V, C>, IScreenWithParams<TParam>, IScreenWithResult<TResult>
         where M : IModel
@@ -224,6 +234,17 @@ namespace Base.Systems
         public void SetResult(TResult result)
         {
             _result = result;
+        }
+
+        protected override void MVCCreated()
+        {
+            base.MVCCreated();
+
+            // Automatically initialize model with parameters if it supports them
+            if (_model is IModelWithParams<TParam> modelWithParams)
+            {
+                modelWithParams.InitializeWithParameters(_parameter);
+            }
         }
     }
     

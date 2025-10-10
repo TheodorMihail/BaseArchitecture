@@ -9,6 +9,16 @@ namespace Base.Systems
     }
 
     /// <summary>
+    /// Models implementing this interface can receive typed parameters during initialization.
+    /// The framework automatically passes parameters when available.
+    /// </summary>
+    public interface IModelWithParams<TParam> : IModel
+        where TParam : IScreenParam
+    {
+        void InitializeWithParameters(TParam parameters);
+    }
+
+    /// <summary>
     /// Base class for Models that hold state and business logic.
     /// Models should not reference Views or Unity-specific components.
     /// Keep Models framework-agnostic for better testability.

@@ -9,11 +9,5 @@ namespace Base.Project
         {
             public string Message { get; set; }
         }
-    
-        protected override void MVCCreated()
-        {
-            base.MVCCreated();
-            _model.Message = _parameter.Message ?? "Unknown error";
-        }
     }
 }

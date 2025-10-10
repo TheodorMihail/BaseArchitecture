@@ -5,7 +5,7 @@ namespace Base.Systems
 {
     /// <summary>
     /// Interface for Controller components in the MVC pattern.
-    /// Controllers are initialized and disposed by Zenject's lifecycle management.
+    /// Controllers are initialized and disposed automatically by the framework.
     /// </summary>
     public interface IController : IInitializable, IDisposable
     {
@@ -50,7 +50,7 @@ namespace Base.Systems
 
     /// <summary>
     /// Controller variant that supports returning a result when the screen closes.
-    /// Use this when screens need to communicate their outcome back to the caller.
+    /// Use this for screens that need to communicate their outcome.
     /// </summary>
     public abstract class ControllerWithResult<S, M, V, TResult> : Controller<S, M, V>
         where S : IScreenWithResult<TResult>
@@ -64,7 +64,7 @@ namespace Base.Systems
         }
 
         /// <summary>
-        /// Closes the screen with a result value that can be retrieved by the caller.
+        /// Closes the screen and sets the result value.
         /// </summary>
         public virtual void CloseScreen(TResult result)
         {
@@ -74,8 +74,8 @@ namespace Base.Systems
     }
 
     /// <summary>
-    /// Controller variant that supports typed input parameters from the screen.
-    /// Access parameters via the Parameters property for type-safe parameter handling.
+    /// Controller variant that supports typed input parameters.
+    /// Access parameters via the Parameters property for type-safe access.
     /// </summary>
     public abstract class ControllerWithParams<S, M, V, TParam> : Controller<S, M, V>
         where S : IScreenWithParams<TParam>
@@ -89,7 +89,7 @@ namespace Base.Systems
         }
 
         /// <summary>
-        /// Gets the typed parameters passed to the screen.
+        /// Provides access to the typed parameters for this screen.
         /// </summary>
         protected TParam Parameters => _screen.GetParameter();
     }
@@ -111,7 +111,7 @@ namespace Base.Systems
         }
 
         /// <summary>
-        /// Closes the screen with a result value that can be retrieved by the caller.
+        /// Closes the screen and sets the result value.
         /// </summary>
         public virtual void CloseScreen(TResult result)
         {

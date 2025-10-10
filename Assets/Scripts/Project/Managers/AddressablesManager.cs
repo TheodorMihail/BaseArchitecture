@@ -1,3 +1,4 @@
+using Base.Systems;
 using Cysharp.Threading.Tasks;
 using System;
 using UnityEngine;
@@ -18,6 +19,13 @@ namespace Base.Project
 
     public class AddressablesManager : IAddressablesManager
     {
+        private readonly IErrorManager _errorManager;
+
+        public AddressablesManager(IErrorManager errorManager)
+        {
+            _errorManager = errorManager;
+        }
+
         public void Initialize()
         {
         }
@@ -28,16 +36,24 @@ namespace Base.Project
 
         public async UniTask<GameObject> LoadPrefab(string addressablePath)
         {
-            var handle = Addressables.LoadAssetAsync<GameObject>(addressablePath);
-            await handle.Task;
-
-            if (handle.Status != AsyncOperationStatus.Succeeded)
+            try
             {
-                Debug.LogError($"Failed to load prefab: {addressablePath}");
-                return default;
-            }
+                var handle = Addressables.LoadAssetAsync<GameObject>(addressablePath);
+                await handle.Task;
 
-            return handle.Result;
+                if (handle.Status != AsyncOperationStatus.Succeeded)
+                {
+                    _errorManager.LogError($"Failed to load prefab: {addressablePath}");
+                    return null;
+                }
+
+                return handle.Result;
+            }
+            catch (Exception ex)
+            {
+                _errorManager.LogError($"Exception loading prefab: {addressablePath}", ex);
+                return null;
+            }
         }
     }
 }

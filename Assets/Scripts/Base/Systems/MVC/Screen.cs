@@ -46,6 +46,7 @@ namespace Base.Systems
     {
         [Inject] private readonly IFactory _factory;
         [Inject] private readonly IAddressablesManager _addressablesManager;
+        [Inject] private readonly IErrorManager _errorManager;
         [Inject] private readonly Transform _screenContainer;
 
         protected M _model;
@@ -87,18 +88,33 @@ namespace Base.Systems
         /// </summary>
         protected async UniTask CreateMVC()
         {
-            var addressablePath = GetAddressablesPath<V>();
-            var prefab = await _addressablesManager.LoadPrefab(addressablePath);
-
-            if (prefab == null)
+            try
             {
-                CloseScreen();
-                return;
-            }
+                var addressablePath = GetAddressablesPath<V>();
+                var prefab = await _addressablesManager.LoadPrefab(addressablePath);
 
-            _view = _factory.CreateFromPrefab(prefab, _screenContainer).GetComponent<V>();
-            _model = _factory.CreateNewObject<M>();
-            _controller = _factory.CreateNewObject<C>(this, _model, _view);
+                if (prefab == null)
+                {
+                    await _errorManager.ShowErrorDialog($"Failed to load screen: {GetType().Name}");
+                    CloseScreen();
+                    return;
+                }
+
+                _view = _factory.CreateFromPrefab(prefab, _screenContainer).GetComponent<V>();
+                _model = _factory.CreateNewObject<M>();
+                _controller = _factory.CreateNewObject<C>(this, _model, _view);
+                MVCCreated();
+            }
+            catch (Exception ex)
+            {
+                _errorManager.LogError($"Error creating screen {GetType().Name}", ex);
+                await _errorManager.ShowErrorDialog("An error occurred while loading the screen.");
+                CloseScreen();
+            }
+        }
+
+        protected virtual void MVCCreated()
+        {
         }
 
         private string GetAddressablesPath<T>() where T : IView

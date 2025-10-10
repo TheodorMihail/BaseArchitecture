@@ -16,16 +16,21 @@ namespace Base.Project
     {
         void UpdateDIContainer(DiContainer container);
         UniTask ShowScreen<T>() where T : IScreen;
-        UniTask ShowScreen<T>(params object[] parameters) where T : IScreen;
 
         /// <summary>
         /// Shows a screen and awaits its result. The returned task completes when the screen closes.
         /// </summary>
         UniTask<TResult> ShowScreen<T, TResult>()
-            where T : IScreen<TResult>
+            where T : IScreenWithResult<TResult>
             where TResult : IScreenResult;
-        UniTask<TResult> ShowScreen<T, TResult>(params object[] parameters)
-            where T : IScreen<TResult>
+            
+        UniTask ShowScreen<T, TParam>(TParam param)
+            where T : IScreenWithParams<TParam>
+            where TParam : IScreenParam;
+            
+        UniTask<TResult> ShowScreen<T, TParam, TResult>(TParam param)
+            where T : IScreenWithParams<TParam>, IScreenWithResult<TResult>
+            where TParam : IScreenParam
             where TResult : IScreenResult;
     }
 
@@ -57,55 +62,74 @@ namespace Base.Project
             await ShowScreenInternal<T>();
         }
 
-        public async UniTask ShowScreen<T>(params object[] parameters) where T : IScreen
-        {
-            await ShowScreenInternal<T>(parameters);
-        }
-
-        public async UniTask<TResult> ShowScreen<T, TResult>() 
-            where T : IScreen<TResult>
+        public async UniTask<TResult> ShowScreen<T, TResult>()
+            where T : IScreenWithResult<TResult>
             where TResult : IScreenResult
         {
             return await ShowScreenInternal<T, TResult>();
         }
 
-        public async UniTask<TResult> ShowScreen<T, TResult>(params object[] parameters) 
-            where T : IScreen<TResult>
-            where TResult : IScreenResult
+        public async UniTask<TResult> ShowScreen<T, TParam, TResult>(TParam param)
+            where T : IScreenWithParams<TParam>, IScreenWithResult<TResult>
+            where TParam : IScreenParam
+            where TResult : IScreenResult   
         {
-            return await ShowScreenInternal<T, TResult>(parameters);
+            return await ShowScreenInternal<T, TParam, TResult>(param);
+        }
+        
+        public async UniTask ShowScreen<T, TParam>(TParam param)
+            where T : IScreenWithParams<TParam>
+            where TParam : IScreenParam
+        {
+            await ShowScreenInternal<T, TParam>(param);
         }
 
-        private async UniTask ShowScreenInternal<T>(params object[] parameters) where T : IScreen
+        private async UniTask ShowScreenInternal<T>() where T : IScreen
         {
-            await WaitForScreenClosure<T>(parameters);
+            var screen = CreateScreenInstance<T>();
+            await WaitForScreenClosure(screen);
         }
 
-        private async UniTask<TResult> ShowScreenInternal<T, TResult>(params object[] parameters) 
-            where T : IScreen<TResult>
+        private async UniTask<TResult> ShowScreenInternal<T, TResult>()
+            where T : IScreenWithResult<TResult>
             where TResult : IScreenResult
         {
-            var screen = await WaitForScreenClosure<T>(parameters);
+            var screen = CreateScreenInstance<T>();
+            await WaitForScreenClosure(screen);
             return screen.GetResult();
         }
 
-        private async UniTask<T> WaitForScreenClosure<T>(params object[] parameters) where T : IScreen
+        private async UniTask ShowScreenInternal<T, TParam>(TParam param)
+            where T : IScreenWithParams<TParam>
+            where TParam : IScreenParam
         {
-            var screensContainer = _diContainer.TryResolveId<Transform>(IScreen.ScreensContainerID);
-            T screen = default;
+            var screen = CreateScreenInstance<T>();
+            screen.SetParameter(param);
+            await WaitForScreenClosure(screen);
+        }
 
-            if (parameters.Length == 0)
-            {
-                screen = _factory.CreateNewObject<T>(screensContainer);
-            }
-            else
-            {
-                screen = _factory.CreateNewObject<T>(screensContainer, parameters);
-            }
+        private async UniTask<TResult> ShowScreenInternal<T, TParam, TResult>(TParam param)
+            where T : IScreenWithParams<TParam>, IScreenWithResult<TResult>
+            where TParam : IScreenParam
+            where TResult : IScreenResult
+        {
+            var screen = CreateScreenInstance<T>();
+            screen.SetParameter(param);
+            await WaitForScreenClosure(screen);
+            return screen.GetResult();
+        }
 
+        private async UniTask WaitForScreenClosure<T>(T screen) where T : IScreen
+        {
             screen.Initialize();
             await screen.WaitForClosure();
             screen.Dispose();
+        }
+
+        private T CreateScreenInstance<T>() where T : IScreen
+        {
+            var screensContainer = _diContainer.TryResolveId<Transform>(IScreen.ScreensContainerID);
+            T screen = _factory.CreateNewObject<T>(screensContainer);
             return screen;
         }
     }

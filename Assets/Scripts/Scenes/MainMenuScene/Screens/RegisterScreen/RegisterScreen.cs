@@ -3,7 +3,7 @@ using static Base.Scenes.MainMenu.RegisterScreen;
 
 namespace Base.Scenes.MainMenu
 {
-    public class RegisterScreen : Screen<RegisterModel, RegisterView, RegisterController, RegisterScreenResult>
+    public class RegisterScreen : ScreenWithResult<RegisterModel, RegisterView, RegisterController, RegisterScreenResult>
     {
         public enum ResultType
         {
@@ -13,7 +13,7 @@ namespace Base.Scenes.MainMenu
 
         public struct RegisterScreenResult : IScreenResult
         {
-            public ResultType State;
+            public ResultType State { get; set; }
         }
     }
 }

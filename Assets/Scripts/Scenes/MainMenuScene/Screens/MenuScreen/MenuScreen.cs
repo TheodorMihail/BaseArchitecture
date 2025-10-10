@@ -3,7 +3,7 @@ using static Base.Scenes.MainMenu.MenuScreen;
 
 namespace Base.Scenes.MainMenu
 {
-    public class MenuScreen : Screen<MenuModel, MenuView, MenuController, MenuScreenResult>
+    public class MenuScreen : ScreenWithResult<MenuModel, MenuView, MenuController, MenuScreenResult>
     {
         public enum ResultType
         {
@@ -13,8 +13,8 @@ namespace Base.Scenes.MainMenu
 
         public struct MenuScreenResult : IScreenResult
         {
-            public string MapUID;
-            public ResultType State;
+            public string MapUID { get; set; }
+            public ResultType State { get; set; }
         }
     }
 }

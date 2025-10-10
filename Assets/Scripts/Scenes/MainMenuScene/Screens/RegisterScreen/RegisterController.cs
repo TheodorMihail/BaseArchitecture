@@ -4,7 +4,7 @@ using static Base.Scenes.MainMenu.RegisterScreen;
 
 namespace Base.Scenes.MainMenu
 {
-    public class RegisterController : Controller<RegisterScreen, RegisterModel, RegisterView, RegisterScreenResult>
+    public class RegisterController : ControllerWithResult<RegisterScreen, RegisterModel, RegisterView, RegisterScreenResult>
     {
         private IAuthenticationManager _authenticationManager;
 

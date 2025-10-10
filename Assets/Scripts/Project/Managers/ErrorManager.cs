@@ -2,6 +2,7 @@ using Base.Systems;
 using Cysharp.Threading.Tasks;
 using System;
 using UnityEngine;
+using static Base.Project.ErrorDialogScreen;
 
 namespace Base.Project
 {
@@ -24,15 +25,15 @@ namespace Base.Project
 
         public async UniTask ShowErrorDialog(string message)
         {
-            Debug.LogError($"[Error] {message}");
+            LogError(message);
 
             // Show dialog and wait for user to close it
-            await _uiManager.ShowScreen<ErrorDialogScreen>(message);
+            var errorParams = new ErrorDialogScreenParams { Message = message };
+            await _uiManager.ShowScreen<ErrorDialogScreen, ErrorDialogScreenParams>(errorParams);
         }
 
         public void LogError(string message, Exception ex = null)
         {
-            _uiManager.ShowScreen<ErrorDialogScreen>(message);
             if (ex != null)
             {
                 Debug.LogError($"[Error] {message}\n{ex}");

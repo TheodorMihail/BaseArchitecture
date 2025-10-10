@@ -22,7 +22,7 @@ namespace Base.Systems
     /// <summary>
     /// Screen interface that supports returning a result upon closure.
     /// </summary>
-    public interface IScreen<TResult> : IScreen
+    public interface IScreenWithResult<TResult> : IScreen
         where TResult : IScreenResult
     {
         TResult GetResult();
@@ -30,9 +30,26 @@ namespace Base.Systems
     }
 
     /// <summary>
+    /// Screen interface that supports receiving typed parameters.
+    /// Parameters are set before screen initialization via SetParameter().
+    /// </summary>
+    public interface IScreenWithParams<TParam> : IScreen
+        where TParam : IScreenParam
+    {
+        TParam GetParameter();
+        void SetParameter(TParam parameter);
+    }
+
+    /// <summary>
     /// Marker interface for screen result data structures.
     /// </summary>
     public interface IScreenResult { }
+
+    /// <summary>
+    /// Marker interface for screen parameter data structures.
+    /// </summary>
+    public interface IScreenParam { }
+
 
     /// <summary>
     /// Base Screen class that automatically creates and manages Model, View, and Controller.
@@ -113,6 +130,10 @@ namespace Base.Systems
             }
         }
 
+        /// <summary>
+        /// Called after Model, View, and Controller are created.
+        /// Override to initialize the Model with parameters or set up initial screen state.
+        /// </summary>
         protected virtual void MVCCreated()
         {
         }
@@ -128,7 +149,7 @@ namespace Base.Systems
     /// Screen variant that supports returning a result when closed.
     /// The result can be retrieved by awaiting ShowScreen in the UIManager.
     /// </summary>
-    public abstract class Screen<M, V, C, TResult> : Screen<M, V, C>, IScreen<TResult>
+    public abstract class ScreenWithResult<M, V, C, TResult> : Screen<M, V, C>, IScreenWithResult<TResult>
         where M : IModel
         where V : IView
         where C : IController
@@ -146,4 +167,64 @@ namespace Base.Systems
             _result = result;
         }
     }
+
+    /// <summary>
+    /// Screen variant that accepts typed input parameters.
+    /// Parameters are set via UIManager before initialization.
+    /// Use MVCCreated() to transfer parameters to the Model.
+    /// </summary>
+    public abstract class ScreenWithParams<M, V, C, TParam> : Screen<M, V, C>, IScreenWithParams<TParam>
+        where M : IModel
+        where V : IView
+        where C : IController
+        where TParam : IScreenParam
+    {
+        protected TParam _parameter;
+
+        public TParam GetParameter()
+        {
+            return _parameter;
+        }
+
+        public void SetParameter(TParam parameter)
+        {
+            _parameter = parameter;
+        }
+    }
+
+    /// <summary>
+    /// Screen variant that supports both typed parameters and returning a result.
+    /// Combines parameter input with result output capabilities.
+    /// </summary>
+    public abstract class ScreenWithParamsAndResult<M, V, C, TParam, TResult> : Screen<M, V, C>, IScreenWithParams<TParam>, IScreenWithResult<TResult>
+        where M : IModel
+        where V : IView
+        where C : IController
+        where TParam : IScreenParam
+        where TResult : IScreenResult
+    {
+        protected TParam _parameter;
+        protected TResult _result;
+
+        public TParam GetParameter()
+        {
+            return _parameter;
+        }
+
+        public void SetParameter(TParam parameter)
+        {
+            _parameter = parameter;
+        }
+
+        public TResult GetResult()
+        {
+            return _result;
+        }
+
+        public void SetResult(TResult result)
+        {
+            _result = result;
+        }
+    }
+    
 }

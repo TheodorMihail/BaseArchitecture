@@ -3,7 +3,7 @@ using static Base.Scenes.MainMenu.LoginScreen;
 
 namespace Base.Scenes.MainMenu
 {
-    public class LoginScreen : Screen<LoginModel, LoginView, LoginController, LoginScreenResult>
+    public class LoginScreen : ScreenWithResult<LoginModel, LoginView, LoginController, LoginScreenResult>
     {
         public enum ResultType
         {
@@ -13,7 +13,7 @@ namespace Base.Scenes.MainMenu
 
         public struct LoginScreenResult : IScreenResult
         {
-            public ResultType State;
+            public ResultType State { get; set; }
         }
     }
 }

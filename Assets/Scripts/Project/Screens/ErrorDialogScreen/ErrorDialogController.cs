@@ -1,8 +1,9 @@
 using Base.Systems;
+using static Base.Project.ErrorDialogScreen;
 
 namespace Base.Project
 {
-    public class ErrorDialogController : Controller<ErrorDialogScreen, ErrorDialogModel, ErrorDialogView>
+    public class ErrorDialogController : ControllerWithParams<ErrorDialogScreen, ErrorDialogModel, ErrorDialogView, ErrorDialogScreenParams>
     {
         public ErrorDialogController(ErrorDialogScreen screen, ErrorDialogModel model, ErrorDialogView view)
             : base(screen, model, view)
@@ -11,9 +12,9 @@ namespace Base.Project
 
         public override void Initialize()
         {
-            base.Initialize();
             _view.OnConfirmPressed += OnConfirmPressed;
             _view.SetMessage(_model.Message);
+            base.Initialize();
         }
 
         public override void Dispose()

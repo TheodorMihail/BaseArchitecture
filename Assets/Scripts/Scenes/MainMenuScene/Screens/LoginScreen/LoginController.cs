@@ -4,7 +4,7 @@ using static Base.Scenes.MainMenu.LoginScreen;
 
 namespace Base.Scenes.MainMenu
 {
-    public class LoginController : Controller<LoginScreen, LoginModel, LoginView, LoginScreenResult>
+    public class LoginController : ControllerWithResult<LoginScreen, LoginModel, LoginView, LoginScreenResult>
     {
         private IAuthenticationManager _authenticationManager;
 

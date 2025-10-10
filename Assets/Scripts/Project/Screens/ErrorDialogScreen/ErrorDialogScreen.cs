@@ -1,16 +1,19 @@
 using Base.Systems;
-using Zenject;
+using static Base.Project.ErrorDialogScreen;
 
 namespace Base.Project
 {
-    public class ErrorDialogScreen : Screen<ErrorDialogModel, ErrorDialogView, ErrorDialogController>
+    public class ErrorDialogScreen : ScreenWithParams<ErrorDialogModel, ErrorDialogView, ErrorDialogController, ErrorDialogScreenParams>
     {
-        [Inject] private readonly object[] _parameters;
-
+        public struct ErrorDialogScreenParams : IScreenParam
+        {
+            public string Message { get; set; }
+        }
+    
         protected override void MVCCreated()
         {
             base.MVCCreated();
-            _model.Message = _parameters[0] as string;
+            _model.Message = _parameter.Message ?? "Unknown error";
         }
     }
 }

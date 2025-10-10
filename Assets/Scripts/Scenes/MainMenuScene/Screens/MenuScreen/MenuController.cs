@@ -5,7 +5,7 @@ using static Base.Scenes.MainMenu.MenuScreen;
 
 namespace Base.Scenes.MainMenu
 {
-    public class MenuController : Controller<MenuScreen, MenuModel, MenuView, MenuScreenResult>
+    public class MenuController : ControllerWithResult<MenuScreen, MenuModel, MenuView, MenuScreenResult>
     {
         private IAuthenticationManager _authenticationManager;
         private List<string> _mapData = new List<string>() { "1", "2" };

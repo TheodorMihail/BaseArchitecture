@@ -7,6 +7,10 @@ using Zenject;
 
 namespace Base.Project
 {
+    /// <summary>
+    /// Wrapper for Unity Addressables system. Loads prefabs asynchronously by their addressable path.
+    /// Returns null if loading fails - check logs for error details.
+    /// </summary>
     public interface IAddressablesManager : IInitializable, IDisposable
     {
         UniTask<GameObject> LoadPrefab(string addressablePath);

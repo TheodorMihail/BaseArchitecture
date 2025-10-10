@@ -6,6 +6,10 @@ using static Base.Scenes.MainMenu.RegisterScreen;
 
 namespace Base.Scenes.MainMenu
 {
+    /// <summary>
+    /// Handles user authentication flow. Demonstrates awaiting screen results
+    /// and managing conditional navigation based on user choices.
+    /// </summary>
     public class AuthenticationState : BaseState<MainMenuStateIds>
     {
         public override MainMenuStateIds Id => MainMenuStateIds.Authentication;

@@ -7,6 +7,10 @@ using Zenject;
 
 namespace Base.Project
 {
+    /// <summary>
+    /// Manages scene loading with async operations and lifecycle events.
+    /// Subscribe to OnSceneLoadStarted/OnSceneLoaded to react to scene transitions.
+    /// </summary>
     public interface IScenesManager : IInitializable, IDisposable
     {
         event Action<string> OnSceneLoadStarted;

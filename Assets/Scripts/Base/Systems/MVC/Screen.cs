@@ -7,6 +7,10 @@ using Zenject;
 
 namespace Base.Systems
 {
+    /// <summary>
+    /// Interface for Screen components that manage the full MVC lifecycle.
+    /// Screens can be awaited to handle async UI flows and state transitions.
+    /// </summary>
     public interface IScreen : IInitializable, IDisposable
     {
         const string ScreensContainerID = "ScreenContainer";
@@ -15,6 +19,9 @@ namespace Base.Systems
         void CloseScreen();
     }
 
+    /// <summary>
+    /// Screen interface that supports returning a result upon closure.
+    /// </summary>
     public interface IScreen<TResult> : IScreen
         where TResult : IScreenResult
     {
@@ -22,8 +29,16 @@ namespace Base.Systems
         void SetResult(TResult result);
     }
 
+    /// <summary>
+    /// Marker interface for screen result data structures.
+    /// </summary>
     public interface IScreenResult { }
 
+    /// <summary>
+    /// Base Screen class that automatically creates and manages Model, View, and Controller.
+    /// Loads View prefab from Addressables using the AddressablePathAttribute on the View class.
+    /// Provides async/await support for handling UI flows and state transitions.
+    /// </summary>
     public abstract class Screen<M, V, C> : IScreen
         where M : IModel
         where V : IView
@@ -67,6 +82,9 @@ namespace Base.Systems
             _screenClosedTcs.TrySetResult();
         }
 
+        /// <summary>
+        /// Creates Model, View, and Controller instances. View prefab is loaded from Addressables.
+        /// </summary>
         protected async UniTask CreateMVC()
         {
             var addressablePath = GetAddressablesPath<V>();
@@ -90,6 +108,10 @@ namespace Base.Systems
         }
     }
 
+    /// <summary>
+    /// Screen variant that supports returning a result when closed.
+    /// The result can be retrieved by awaiting ShowScreen in the UIManager.
+    /// </summary>
     public abstract class Screen<M, V, C, TResult> : Screen<M, V, C>, IScreen<TResult>
         where M : IModel
         where V : IView

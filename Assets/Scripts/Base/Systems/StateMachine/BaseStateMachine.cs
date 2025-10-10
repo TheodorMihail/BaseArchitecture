@@ -11,10 +11,20 @@ namespace Base.Systems
     {
     }
 
+    /// <summary>
+    /// Generic state machine base class for managing application and scene state flows.
+    /// Automatically handles state transitions, lifecycle management, and event subscriptions.
+    /// Implement DefaultStateId and OnStateFinished to define your state flow logic.
+    /// </summary>
     public abstract class BaseStateMachine<T> : IStateMachine<T>
         where T : Enum
     {
         protected abstract T DefaultStateId { get; }
+
+        /// <summary>
+        /// Called when a state completes. Implement this to define state transition logic.
+        /// Use SetState() to transition to the next state based on the finished state and its parameters.
+        /// </summary>
         protected abstract void OnStateFinished((T stateId, object[] paramsList) finishedState);
 
         protected readonly IList<IState<T>> _states;

@@ -5,6 +5,10 @@ using Zenject;
 
 namespace Base.Scenes.GamePreload
 {
+    /// <summary>
+    /// Scene-level Zenject installer. Binds screen containers and state machine components.
+    /// Must call UpdateDIContainer() to enable UIManager screen instantiation in scene context.
+    /// </summary>
     public class GamePreloadInstaller : MonoInstaller
     {
         public Transform ScreensContainer;

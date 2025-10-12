@@ -4,7 +4,7 @@ using static Base.Scenes.MainMenu.LoginScreen;
 
 namespace Base.Scenes.MainMenu
 {
-    public class LoginController : ControllerWithResult<LoginScreen, LoginModel, LoginView, LoginScreenResult>
+    public class LoginController : Controller<LoginScreen, LoginModel, LoginView>
     {
         private IAuthenticationManager _authenticationManager;
 
@@ -32,7 +32,7 @@ namespace Base.Scenes.MainMenu
 
         private void OnRegisterBtnPressed()
         {
-            CloseScreen(new LoginScreenResult() { State = ResultType.Register });
+            this.CloseScreenWithResult(_screen, new LoginScreenResult() { State = ResultType.Register });
         }
 
         private async void OnLoginConfirmBtnPressed((string username, string password) credentials)
@@ -42,7 +42,7 @@ namespace Base.Scenes.MainMenu
 
             if (loginSuccess)
             {
-                CloseScreen(new LoginScreenResult() { State = ResultType.LoginSuccess });
+                this.CloseScreenWithResult(_screen, new LoginScreenResult() { State = ResultType.LoginSuccess });
             }
             else
             {

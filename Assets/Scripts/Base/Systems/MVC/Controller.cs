@@ -47,76 +47,17 @@ namespace Base.Systems
             _screen.CloseScreen();
         }
     }
-
-    /// <summary>
-    /// Controller variant that supports returning a result when the screen closes.
-    /// Use this for screens that need to communicate their outcome.
-    /// </summary>
-    public abstract class ControllerWithResult<S, M, V, TResult> : Controller<S, M, V>
-        where S : IScreenWithResult<TResult>
-        where M : IModel
-        where V : IView
-        where TResult : IScreenResult
+    
+    public static class ControllerExtensions
     {
-        protected ControllerWithResult(S screen, M model, V view)
-            : base(screen, model, view)
+        public static void CloseScreenWithResult<TResult>(
+            this IController controller, 
+            IScreenWithResult<TResult> screen, 
+            TResult result) 
+            where TResult : IScreenResult
         {
-        }
-
-        /// <summary>
-        /// Closes the screen and sets the result value.
-        /// </summary>
-        public virtual void CloseScreen(TResult result)
-        {
-            _screen.SetResult(result);
-            _screen.CloseScreen();
-        }
-    }
-
-    /// <summary>
-    /// Controller variant that supports typed input parameters.
-    /// Access parameters via the Parameters property for type-safe access.
-    /// </summary>
-    public abstract class ControllerWithParams<S, M, V, TParam> : Controller<S, M, V>
-        where S : IScreenWithParams<TParam>
-        where M : IModel
-        where V : IView
-        where TParam : IScreenParam
-    {
-        protected ControllerWithParams(S screen, M model, V view)
-            : base(screen, model, view)
-        {
-        }
-
-        /// <summary>
-        /// Provides access to the typed parameters for this screen.
-        /// </summary>
-        protected TParam Parameters => _screen.GetParameter();
-    }
-
-    /// <summary>
-    /// Controller variant that supports both typed input parameters and result return.
-    /// Combines parameter handling with result setting capabilities.
-    /// </summary>
-    public abstract class ControllerWithParamsAndResult<S, M, V, TParam, TResult> : ControllerWithParams<S, M, V, TParam>
-        where S : IScreenWithParams<TParam>, IScreenWithResult<TResult>
-        where M : IModel
-        where V : IView
-        where TParam : IScreenParam
-        where TResult : IScreenResult
-    {
-        protected ControllerWithParamsAndResult(S screen, M model, V view)
-            : base(screen, model, view)
-        {
-        }
-
-        /// <summary>
-        /// Closes the screen and sets the result value.
-        /// </summary>
-        public virtual void CloseScreen(TResult result)
-        {
-            _screen.SetResult(result);
-            _screen.CloseScreen();
+            screen.SetResult(result);
+            screen.CloseScreen();
         }
     }
 }

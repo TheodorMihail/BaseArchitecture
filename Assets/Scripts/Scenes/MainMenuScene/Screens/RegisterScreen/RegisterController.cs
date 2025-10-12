@@ -4,7 +4,7 @@ using static Base.Scenes.MainMenu.RegisterScreen;
 
 namespace Base.Scenes.MainMenu
 {
-    public class RegisterController : ControllerWithResult<RegisterScreen, RegisterModel, RegisterView, RegisterScreenResult>
+    public class RegisterController : Controller<RegisterScreen, RegisterModel, RegisterView>
     {
         private IAuthenticationManager _authenticationManager;
 
@@ -37,7 +37,7 @@ namespace Base.Scenes.MainMenu
 
             if (registerSuccess)
             {
-                CloseScreen(new RegisterScreenResult() { State = ResultType.RegisterSuccess });
+                this.CloseScreenWithResult(_screen, new RegisterScreenResult() { State = ResultType.RegisterSuccess });
             }
             else
             {
@@ -47,7 +47,7 @@ namespace Base.Scenes.MainMenu
 
         private void OnRegisterCancelBtnPressed()
         {
-            CloseScreen(new RegisterScreenResult() { State = ResultType.RegisterCanceled });
+            this.CloseScreenWithResult(_screen, new RegisterScreenResult() { State = ResultType.RegisterCanceled });
         }
     }
 }

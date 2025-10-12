@@ -36,7 +36,6 @@ namespace Base.Systems
     public interface IScreenWithParams<TParam> : IScreen
         where TParam : IScreenParam
     {
-        TParam GetParameter();
         void SetParameter(TParam parameter);
     }
 
@@ -144,108 +143,4 @@ namespace Base.Systems
             return attribute?.Path;
         }
     }
-
-    /// <summary>
-    /// Screen variant that supports returning a result when closed.
-    /// The result can be retrieved by awaiting the screen display operation.
-    /// </summary>
-    public abstract class ScreenWithResult<M, V, C, TResult> : Screen<M, V, C>, IScreenWithResult<TResult>
-        where M : IModel
-        where V : IView
-        where C : IController
-        where TResult : IScreenResult
-    {
-        protected TResult _result;
-
-        public TResult GetResult()
-        {
-            return _result;
-        }
-
-        public void SetResult(TResult result)
-        {
-            _result = result;
-        }
-    }
-
-    /// <summary>
-    /// Screen variant that accepts typed input parameters.
-    /// Parameters are automatically passed to the Model if it supports parameter initialization.
-    /// </summary>
-    public abstract class ScreenWithParams<M, V, C, TParam> : Screen<M, V, C>, IScreenWithParams<TParam>
-        where M : IModel
-        where V : IView
-        where C : IController
-        where TParam : IScreenParam
-    {
-        protected TParam _parameter;
-
-        public TParam GetParameter()
-        {
-            return _parameter;
-        }
-
-        public void SetParameter(TParam parameter)
-        {
-            _parameter = parameter;
-        }
-
-        protected override void MVCCreated()
-        {
-            base.MVCCreated();
-
-            // Automatically initialize model with parameters if it supports them
-            if (_model is IModelWithParams<TParam> modelWithParams)
-            {
-                modelWithParams.InitializeWithParameters(_parameter);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Screen variant that supports both typed parameters and returning a result.
-    /// Parameters are automatically passed to the Model if it supports parameter initialization.
-    /// </summary>
-    public abstract class ScreenWithParamsAndResult<M, V, C, TParam, TResult> : Screen<M, V, C>, IScreenWithParams<TParam>, IScreenWithResult<TResult>
-        where M : IModel
-        where V : IView
-        where C : IController
-        where TParam : IScreenParam
-        where TResult : IScreenResult
-    {
-        protected TParam _parameter;
-        protected TResult _result;
-
-        public TParam GetParameter()
-        {
-            return _parameter;
-        }
-
-        public void SetParameter(TParam parameter)
-        {
-            _parameter = parameter;
-        }
-
-        public TResult GetResult()
-        {
-            return _result;
-        }
-
-        public void SetResult(TResult result)
-        {
-            _result = result;
-        }
-
-        protected override void MVCCreated()
-        {
-            base.MVCCreated();
-
-            // Automatically initialize model with parameters if it supports them
-            if (_model is IModelWithParams<TParam> modelWithParams)
-            {
-                modelWithParams.InitializeWithParameters(_parameter);
-            }
-        }
-    }
-    
 }

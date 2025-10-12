@@ -1,9 +1,8 @@
 using Base.Systems;
-using static Base.Project.ErrorDialogScreen;
 
 namespace Base.Project
 {
-    public class ErrorDialogController : ControllerWithParams<ErrorDialogScreen, ErrorDialogModel, ErrorDialogView, ErrorDialogScreenParams>
+    public class ErrorDialogController : Controller<ErrorDialogScreen, ErrorDialogModel, ErrorDialogView>
     {
         public ErrorDialogController(ErrorDialogScreen screen, ErrorDialogModel model, ErrorDialogView view)
             : base(screen, model, view)

@@ -5,7 +5,7 @@ using static Base.Scenes.MainMenu.MenuScreen;
 
 namespace Base.Scenes.MainMenu
 {
-    public class MenuController : ControllerWithResult<MenuScreen, MenuModel, MenuView, MenuScreenResult>
+    public class MenuController : Controller<MenuScreen, MenuModel, MenuView>
     {
         private IAuthenticationManager _authenticationManager;
         private List<string> _mapData = new List<string>() { "1", "2" };
@@ -34,17 +34,13 @@ namespace Base.Scenes.MainMenu
 
         private void OnMapSelectedBtnPressed(string mapUID)
         {
-            CloseScreen(new MenuScreenResult() 
-            { 
-                State = ResultType.MapSelected, 
-                MapUID = mapUID
-            });
+            this.CloseScreenWithResult(_screen, new MenuScreenResult() { State = ResultType.MapSelected, MapUID = mapUID });
         }
 
         private void OnMapSelectionCanceledBtnPressed()
         {
             _authenticationManager.LogOut();
-            CloseScreen(new MenuScreenResult() { State = ResultType.MapSelectionCanceled });
+            this.CloseScreenWithResult(_screen, new MenuScreenResult() { State = ResultType.MapSelectionCanceled });
         }
     }
 }

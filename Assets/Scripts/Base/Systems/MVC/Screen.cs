@@ -36,7 +36,6 @@ namespace Base.Systems
     public interface IScreenWithParams<TParam> : IScreen
         where TParam : IScreenParam
     {
-        TParam GetParameter();
         void SetParameter(TParam parameter);
     }
 
@@ -179,11 +178,6 @@ namespace Base.Systems
         where TParam : IScreenParam
     {
         protected TParam _parameter;
-
-        public TParam GetParameter()
-        {
-            return _parameter;
-        }
 
         public void SetParameter(TParam parameter)
         {

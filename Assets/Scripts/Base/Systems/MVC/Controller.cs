@@ -3,10 +3,19 @@ using Zenject;
 
 namespace Base.Systems
 {
+    /// <summary>
+    /// Interface for Controller components in the MVC pattern.
+    /// Controllers are initialized and disposed automatically by the framework.
+    /// </summary>
     public interface IController : IInitializable, IDisposable
     {
     }
 
+    /// <summary>
+    /// Base class for Controllers that orchestrate Model and View interactions.
+    /// Subscribe to View events in Initialize(), update Models based on user input,
+    /// and update Views based on Model changes. Unsubscribe from events in Dispose().
+    /// </summary>
     public abstract class Controller<S, M, V> : IController
         where S : IScreen
         where M : IModel
@@ -38,22 +47,17 @@ namespace Base.Systems
             _screen.CloseScreen();
         }
     }
-
-    public abstract class Controller<S, M, V, TResult> : Controller<S, M, V>
-        where S : IScreen<TResult>
-        where M : IModel
-        where V : IView
-        where TResult : IScreenResult
+    
+    public static class ControllerExtensions
     {
-        protected Controller(S screen, M model, V view) 
-            : base(screen, model, view)
+        public static void CloseScreenWithResult<TResult>(
+            this IController controller, 
+            IScreenWithResult<TResult> screen, 
+            TResult result) 
+            where TResult : IScreenResult
         {
-        }
-
-        public virtual void CloseScreen(TResult result)
-        {
-            _screen.SetResult(result);
-            _screen.CloseScreen();
+            screen.SetResult(result);
+            screen.CloseScreen();
         }
     }
 }

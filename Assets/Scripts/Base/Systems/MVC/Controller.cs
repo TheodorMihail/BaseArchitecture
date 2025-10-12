@@ -47,4 +47,17 @@ namespace Base.Systems
             _screen.CloseScreen();
         }
     }
+    
+    public static class ControllerExtensions
+    {
+        public static void CloseScreenWithResult<TResult>(
+            this IController controller, 
+            IScreenWithResult<TResult> screen, 
+            TResult result) 
+            where TResult : IScreenResult
+        {
+            screen.SetResult(result);
+            screen.CloseScreen();
+        }
+    }
 }

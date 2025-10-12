@@ -34,20 +34,13 @@ namespace Base.Scenes.MainMenu
 
         private void OnMapSelectedBtnPressed(string mapUID)
         {
-            _screen.SetResult(new MenuScreenResult()
-            {
-                State = ResultType.MapSelected,
-                MapUID = mapUID
-            });
-            
-            CloseScreen();
+            this.CloseScreenWithResult(_screen, new MenuScreenResult() { State = ResultType.MapSelected, MapUID = mapUID });
         }
 
         private void OnMapSelectionCanceledBtnPressed()
         {
             _authenticationManager.LogOut();
-            _screen.SetResult(new MenuScreenResult() { State = ResultType.MapSelectionCanceled });
-            CloseScreen();
+            this.CloseScreenWithResult(_screen, new MenuScreenResult() { State = ResultType.MapSelectionCanceled });
         }
     }
 }

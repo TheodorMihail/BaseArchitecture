@@ -32,8 +32,7 @@ namespace Base.Scenes.MainMenu
 
         private void OnRegisterBtnPressed()
         {
-            _screen.SetResult(new LoginScreenResult() { State = ResultType.Register });
-            CloseScreen();
+            this.CloseScreenWithResult(_screen, new LoginScreenResult() { State = ResultType.Register });
         }
 
         private async void OnLoginConfirmBtnPressed((string username, string password) credentials)
@@ -43,8 +42,7 @@ namespace Base.Scenes.MainMenu
 
             if (loginSuccess)
             {
-                _screen.SetResult(new LoginScreenResult() { State = ResultType.LoginSuccess });
-                CloseScreen();
+                this.CloseScreenWithResult(_screen, new LoginScreenResult() { State = ResultType.LoginSuccess });
             }
             else
             {

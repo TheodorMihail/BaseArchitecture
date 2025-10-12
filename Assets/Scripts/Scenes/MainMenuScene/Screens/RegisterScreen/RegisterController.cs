@@ -37,8 +37,7 @@ namespace Base.Scenes.MainMenu
 
             if (registerSuccess)
             {
-                _screen.SetResult(new RegisterScreenResult() { State = ResultType.RegisterSuccess });
-                CloseScreen();
+                this.CloseScreenWithResult(_screen, new RegisterScreenResult() { State = ResultType.RegisterSuccess });
             }
             else
             {
@@ -48,8 +47,7 @@ namespace Base.Scenes.MainMenu
 
         private void OnRegisterCancelBtnPressed()
         {
-            _screen.SetResult(new RegisterScreenResult() { State = ResultType.RegisterCanceled });
-            CloseScreen();
+            this.CloseScreenWithResult(_screen, new RegisterScreenResult() { State = ResultType.RegisterCanceled });
         }
     }
 }

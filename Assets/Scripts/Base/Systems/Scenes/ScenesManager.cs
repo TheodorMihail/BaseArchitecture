@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Zenject;
 
-namespace Base.Project
+namespace Base.Systems
 {
     /// <summary>
     /// Manages scene loading with async operations and lifecycle events.

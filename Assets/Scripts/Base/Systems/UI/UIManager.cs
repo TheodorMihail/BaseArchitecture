@@ -5,7 +5,7 @@ using UnityEngine;
 using Zenject;
 using IFactory = Base.Systems.IFactory;
 
-namespace Base.Project
+namespace Base.Systems
 {
     /// <summary>
     /// Manages UI screen lifecycle and presentation.

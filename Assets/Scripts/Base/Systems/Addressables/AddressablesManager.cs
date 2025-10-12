@@ -6,7 +6,7 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using Zenject;
 
-namespace Base.Project
+namespace Base.Systems
 {
     /// <summary>
     /// Wrapper for Unity Addressables system. Loads prefabs asynchronously by their addressable path.

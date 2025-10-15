@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using System;
+using System.Runtime.CompilerServices;
 using Zenject;
 
 namespace Base.Systems
@@ -18,6 +19,10 @@ namespace Base.Systems
         /// <summary>
         /// Logs an error without showing dialog. Use for non-critical errors.
         /// </summary>
-        void LogError(string message, Exception ex = null);
+        /// <typeparam name="T">The type of the calling class for context</typeparam>
+        /// <param name="message">Error message</param>
+        /// <param name="ex">Optional exception</param>
+        /// <param name="memberName">Automatically captured calling method name</param>
+        void LogError<T>(string message, Exception ex = null, [CallerMemberName] string memberName = "");
     }
 }

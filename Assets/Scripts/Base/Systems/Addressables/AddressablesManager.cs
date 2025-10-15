@@ -43,7 +43,7 @@ namespace Base.Systems
 
                 if (handle.Status != AsyncOperationStatus.Succeeded)
                 {
-                    _errorManager.LogError($"Failed to load prefab: {addressablePath}");
+                    _errorManager.LogError<AddressablesManager>($"Failed to load prefab: {addressablePath}");
                     return null;
                 }
 
@@ -51,7 +51,7 @@ namespace Base.Systems
             }
             catch (Exception ex)
             {
-                _errorManager.LogError($"Exception loading prefab: {addressablePath}", ex);
+                _errorManager.LogError<AddressablesManager>($"Exception loading prefab: {addressablePath}", ex);
                 return null;
             }
         }

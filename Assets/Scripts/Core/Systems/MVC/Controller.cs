@@ -17,17 +17,17 @@ namespace BaseArchitecture.Core
     /// and update Views based on Model changes. Unsubscribe from events in Dispose().
     /// </summary>
     public abstract class Controller<S, M, V> : IController
-        where S : IScreen
+        where S : IUIComponent
         where M : IModel
         where V : IView
     {
-        protected readonly S _screen;
+        protected readonly S _uiComponent;
         protected readonly M _model;
         protected V _view;
 
-        public Controller(S screen, M model, V view)
+        public Controller(S uiComponent, M model, V view)
         {
-            _screen = screen;
+            _uiComponent = uiComponent;
             _model = model;
             _view = view;
         }
@@ -39,25 +39,22 @@ namespace BaseArchitecture.Core
 
         public virtual void Dispose()
         {
-            _view.CloseView();
         }
 
-        public virtual void CloseScreen()
+        protected virtual void Close()
         {
-            _screen.CloseScreen();
+            _uiComponent.Close();
         }
-    }
-    
-    public static class ControllerExtensions
-    {
-        public static void CloseScreenWithResult<TResult>(
-            this IController controller, 
-            IScreenWithResult<TResult> screen, 
-            TResult result) 
+        
+        protected virtual void CloseScreenWithResult<TResult>(TResult result) 
             where TResult : IScreenResult
         {
-            screen.SetResult(result);
-            screen.CloseScreen();
+            if (_uiComponent is IScreenWithResult<TResult> screenWithResult)
+            {
+                screenWithResult.SetResult(result);
+            }
+
+            Close();
         }
     }
 }

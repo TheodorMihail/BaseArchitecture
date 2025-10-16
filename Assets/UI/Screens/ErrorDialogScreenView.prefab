@@ -305,7 +305,7 @@ GameObject:
   - component: {fileID: 802698915899287170}
   - component: {fileID: 424176654984882557}
   m_Layer: 5
-  m_Name: ErrorDialogView
+  m_Name: ErrorDialogScreenView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

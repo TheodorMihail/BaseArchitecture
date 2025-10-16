@@ -7,22 +7,27 @@
 It includes a few placeholder scenes on the surface, but under the hood it brings together:
 
 - ✅ **SOLID principles** — to ensure clear responsibilities and maintainable code
-- 🎮 **MVC pattern** — to separate logic, UI, and data cleanly
+- 🎮 **Flexible MVC pattern** — with optional typed parameters and results
+- 📺 **Dual UI System** — Screens for blocking flows and HUDs for persistent UI
 - 🔁 **State Machines** — for predictable, extensible gameplay flow
 - 🧠 **Zenject (Dependency Injection)** — for decoupling and testability
 - 🔄 **UniTask** — for clean async/await operations
 - 📦 **Addressables** — for efficient asset management
+- ⚡ **Assembly Definitions** — for faster compile times
 
 ---
 
 <h2>🧰 What's inside</h2>
 
-- Simple demo scenes to showcase structure (not gameplay-focused)
-- Folder structure built for modular feature development
-- Interfaces and base classes for consistent extension
+- **UIComponent Abstraction** — Unified base for both Screens and HUDs
+- **Screen System** — Blocking UI flows with async/await support
+- **HUD System** — Persistent UI elements that don't block execution
+- **Simplified MVC Architecture** — Single base classes with interface-based features
+- **Type-Safe UI Flow** — Strongly-typed screen parameters and results
+- **Error Handling** — Built-in error management system
+- **Utility Extensions** — Helper methods for common patterns
+- **Assembly Definitions** — Clean boundaries and faster compilation
 - Example usage of installers, managers, controllers, and views
-- Minimal dependencies, ready to plug into your own pipeline
-- **Assembly definitions** for faster compile times
 
 ---
 
@@ -34,32 +39,53 @@ After years of working in Unity on everything from mobile games to large-scale m
 
 ---
 
-<h2>🔧 Using as Git Submodule</h2>
-
-This repository is designed to be used as a **git submodule** in your Unity game projects, allowing you to share the core framework across multiple games while keeping game-specific code separate.
-
----
-
 <h2>🏗️ Architecture Guide</h2>
 
 ### MVC Pattern
 
-**Screens** manage the full MVC lifecycle:
-- Can optionally accept **typed parameters** via `IScreenWithParams<TParam>`
-- Can optionally return **typed results** via `IScreenWithResult<TResult>`
-- Automatically create and manage Model, View, Controller
+The framework provides **Screens** and **HUDs** as predefined MVC containers:
 
-**Models** handle data and business logic:
-- Implement `IModelWithParams<TParam>` for automatic parameter initialization
-- Should be framework-agnostic (no Unity dependencies)
+- **Screens** — Block execution and wait for user interaction (e.g., dialogs, menus)
+- **HUDs** — Remain visible without blocking user interaction
+
+Both control their MVC lifecycle automatically:
+
+**Models** are data containers:
+- Can implement interfaces for automatic parameter initialization
 
 **Views** are Unity MonoBehaviours:
-- Use `[AddressablePath("path")]` attribute for automatic prefab loading
+- Automatically instantiated from prefabs using attributes
 - Expose events for user interactions
-- Update UI based on data
 
-**Controllers** orchestrate Model-View interactions:
-- Subscribe to View events in `Initialize()`
-- Update Models based on user input
-- Update Views based on Model changes
-- Use `CloseScreenWithResult()` extension for returning results
+**Controllers** orchestrate interactions:
+- Subscribe to View events
+- Update Models and Views
+- Work with both Screens and HUDs
+
+**Parameters & Results:**
+- Screens can accept typed parameters for initialization
+- Screens can return typed results when closed
+
+### Scene Management
+
+Each scene is organized with:
+
+- **Scene Installer** — Zenject bindings for scene-specific dependencies
+- **State Machine** — Controls scene flow through multiple states
+- **States** — Individual scene phases (e.g., loading, gameplay, pause)
+
+### Core Managers
+
+**ScenesManager** — Handles scene transitions with async operations
+
+**Factory** — Creates objects and instantiates prefabs with dependency injection
+
+**AddressablesManager** — Loads assets asynchronously via Addressables
+
+**ErrorManager** — Handles error logging and displays error-specific screens
+
+---
+
+<h2>🔧 Using as Git Submodule</h2>
+
+This repository is designed to be used as a **git submodule** in your Unity game projects, allowing you to share the core framework across multiple games while keeping game-specific code separate.

@@ -16,12 +16,7 @@ namespace BaseArchitecture.Core
 
     public class Factory : IFactory
     {
-        protected readonly DiContainer _container;
-
-        public Factory(DiContainer container)
-        {
-            _container = container;
-        }
+        [Inject] protected readonly DiContainer _container;
 
         public T CreateFromPrefab<T>(T prefab, Transform container)
         {

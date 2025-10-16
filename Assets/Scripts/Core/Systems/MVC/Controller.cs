@@ -23,7 +23,7 @@ namespace BaseArchitecture.Core
     {
         protected readonly S _uiComponent;
         protected readonly M _model;
-        protected V _view;
+        protected readonly V _view;
 
         public Controller(S uiComponent, M model, V view)
         {

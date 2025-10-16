@@ -22,7 +22,7 @@ namespace BaseArchitecture.Core.Screens
 
         private void OnConfirmPressed()
         {
-            CloseScreen();
+            Close();
         }
     }
 }

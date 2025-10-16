@@ -8,30 +8,28 @@ using IFactory = BaseArchitecture.Core.IFactory;
 namespace BaseArchitecture.Core
 {
     /// <summary>
-    /// Manages UI screen lifecycle and presentation.
+    /// Manages UI screen and HUD lifecycle and presentation.
     /// Supports screens with return values and typed parameters.
-    /// Update the DI container in scene installers to enable screen instantiation in that context.
+    /// HUDs are persistent UI elements that return immediately.
+    /// Update the DI container in scene installers to enable UI instantiation in that context.
     /// </summary>
     public interface IUIManager : IInitializable, IDisposable
     {
         void UpdateDIContainer(DiContainer container);
-        UniTask ShowScreen<T>() where T : IScreen;
 
-        /// <summary>
-        /// Shows a screen and returns its result when closed.
-        /// </summary>
+        UniTask ShowScreen<T>() where T : IScreen;
         UniTask<TResult> ShowScreen<T, TResult>()
             where T : IScreenWithResult<TResult>
             where TResult : IScreenResult;
-            
         UniTask ShowScreen<T, TParam>(TParam param)
             where T : IScreenWithParams<TParam>
             where TParam : IScreenParam;
-            
         UniTask<TResult> ShowScreen<T, TParam, TResult>(TParam param)
             where T : IScreenWithParams<TParam>, IScreenWithResult<TResult>
             where TParam : IScreenParam
             where TResult : IScreenResult;
+
+        T ShowHUD<T>() where T : IHUD;
     }
 
     public class UIManager : IUIManager
@@ -123,14 +121,40 @@ namespace BaseArchitecture.Core
         {
             screen.Initialize();
             await screen.WaitForClosure();
-            screen.Dispose();
+        }
+
+        private T CreateUIComponentInstance<T>() where T : IUIComponent
+        {
+            string containerID;
+
+            if (typeof(IScreen).IsAssignableFrom(typeof(T)))
+            {
+                containerID = IScreen.ScreensContainerID;
+            }
+            else if (typeof(IHUD).IsAssignableFrom(typeof(T)))
+            {
+                containerID = IHUD.HUDContainerID;
+            }
+            else
+            {
+                throw new InvalidOperationException($"Unsupported UI component type: {typeof(T).Name}");
+            }
+
+            var container = _diContainer.TryResolveId<Transform>(containerID);
+            T uiComponent = _factory.CreateNewObject<T>(container);
+            return uiComponent;
         }
 
         private T CreateScreenInstance<T>() where T : IScreen
         {
-            var screensContainer = _diContainer.TryResolveId<Transform>(IScreen.ScreensContainerID);
-            T screen = _factory.CreateNewObject<T>(screensContainer);
-            return screen;
+            return CreateUIComponentInstance<T>();
+        }
+
+        public T ShowHUD<T>() where T : IHUD
+        {
+            T hud = CreateUIComponentInstance<T>();
+            hud.Initialize();
+            return hud;
         }
     }
 }

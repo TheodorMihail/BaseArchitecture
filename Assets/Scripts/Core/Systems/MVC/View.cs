@@ -10,7 +10,6 @@ namespace BaseArchitecture.Core
     /// </summary>
     public interface IView : IInitializable
     {
-        void CloseView();
     }
 
     /// <summary>
@@ -20,15 +19,7 @@ namespace BaseArchitecture.Core
     /// </summary>
     public abstract class View : MonoBehaviour, IView
     {
-        public bool HasBeenDestroyed => this == null || gameObject == null;
-
         public virtual void Initialize() { }
-
-        public void CloseView()
-        {
-            if (!HasBeenDestroyed)
-                GameObject.Destroy(gameObject);
-        }
     }
 
     /// <summary>

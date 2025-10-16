@@ -1,4 +1,3 @@
-using BaseArchitecture.Core;
 using Cysharp.Threading.Tasks;
 using System;
 using UnityEngine;
@@ -19,12 +18,7 @@ namespace BaseArchitecture.Core
 
     public class AddressablesManager : IAddressablesManager
     {
-        private readonly IErrorManager _errorManager;
-
-        public AddressablesManager(IErrorManager errorManager)
-        {
-            _errorManager = errorManager;
-        }
+        [Inject] private readonly IErrorManager _errorManager;
 
         public void Initialize()
         {

@@ -34,13 +34,8 @@ namespace BaseArchitecture.Core
 
     public class UIManager : IUIManager
     {
-        private readonly IFactory _factory;
+        [Inject] private readonly IFactory _factory;
         private DiContainer _diContainer;
-
-        public UIManager(IFactory factory)
-        {
-            _factory = factory;
-        }
 
         public void Initialize()
         {

@@ -17,20 +17,6 @@ It includes a few placeholder scenes on the surface, but under the hood it bring
 
 ---
 
-<h2>🧰 What's inside</h2>
-
-- **UIComponent Abstraction** — Unified base for both Screens and HUDs
-- **Screen System** — Blocking UI flows with async/await support
-- **HUD System** — Persistent UI elements that don't block execution
-- **Simplified MVC Architecture** — Single base classes with interface-based features
-- **Type-Safe UI Flow** — Strongly-typed screen parameters and results
-- **Error Handling** — Built-in error management system
-- **Utility Extensions** — Helper methods for common patterns
-- **Assembly Definitions** — Clean boundaries and faster compilation
-- Example usage of installers, managers, controllers, and views
-
----
-
 <h2>📦 Why this matters</h2>
 
 This project is ideal as a starting point for new Unity games, offering a battle-tested architectural foundation. Whether you're prototyping or preparing for production, this structure helps avoid spaghetti code and scaling issues from the start.
@@ -41,7 +27,7 @@ After years of working in Unity on everything from mobile games to large-scale m
 
 <h2>🏗️ Architecture Guide</h2>
 
-### MVC Pattern
+### 🎮 MVC Pattern
 
 The framework provides **Screens** and **HUDs** as predefined MVC containers:
 
@@ -50,23 +36,12 @@ The framework provides **Screens** and **HUDs** as predefined MVC containers:
 
 Both control their MVC lifecycle automatically:
 
-**Models** are data containers:
-- Can implement interfaces for automatic parameter initialization
+- **Models** — Data containers with optional auto-initialization from parameters
+- **Views** — Unity MonoBehaviours instantiated from prefabs using attributes
+- **Controllers** — Orchestrate interactions between Models and Views
+- **Parameters & Results** — Type-safe screen communication
 
-**Views** are Unity MonoBehaviours:
-- Automatically instantiated from prefabs using attributes
-- Expose events for user interactions
-
-**Controllers** orchestrate interactions:
-- Subscribe to View events
-- Update Models and Views
-- Work with both Screens and HUDs
-
-**Parameters & Results:**
-- Screens can accept typed parameters for initialization
-- Screens can return typed results when closed
-
-### Scene Management
+### 🎬 Scene Management
 
 Each scene is organized with:
 
@@ -74,15 +49,12 @@ Each scene is organized with:
 - **State Machine** — Controls scene flow through multiple states
 - **States** — Individual scene phases (e.g., loading, gameplay, pause)
 
-### Core Managers
+### 🛠️ Core Managers
 
-**ScenesManager** — Handles scene transitions with async operations
-
-**Factory** — Creates objects and instantiates prefabs with dependency injection
-
-**AddressablesManager** — Loads assets asynchronously via Addressables
-
-**ErrorManager** — Handles error logging and displays error-specific screens
+- **ScenesManager** — Handles scene transitions with async operations
+- **Factory** — Creates objects and instantiates prefabs with dependency injection
+- **AddressablesManager** — Loads assets asynchronously via Addressables
+- **ErrorManager** — Handles error logging and displays error-specific screens
 
 ---
 

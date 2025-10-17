@@ -25,7 +25,7 @@ namespace BaseArchitecture.Core
         where V : IView
         where C : IController
     {
-        [Inject] protected readonly IFactory _factory;
+        [Inject] protected readonly ICustomFactory _factory;
         [Inject] protected readonly IAddressablesManager _addressablesManager;
         [Inject] protected readonly IErrorManager _errorManager;
 

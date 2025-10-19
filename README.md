@@ -13,6 +13,7 @@ It includes a few placeholder scenes on the surface, but under the hood it bring
 - 🧠 **Zenject (Dependency Injection)** — for decoupling and testability
 - 🔄 **UniTask** — for clean async/await operations
 - 📦 **Addressables** — for efficient asset management
+- ♻️ **Object Pooling** — for optimized object reuse and reduced GC pressure
 - ⚡ **Assembly Definitions** — for faster compile times
 
 ---
@@ -49,12 +50,13 @@ Each scene is organized with:
 - **State Machine** — Controls scene flow through multiple states
 - **States** — Individual scene phases (e.g., loading, gameplay, pause)
 
-### 🛠️ Core Managers
+### 🛠️ Core Systems
 
 - **ScenesManager** — Handles scene transitions with async operations
 - **Factory** — Creates objects and instantiates prefabs with dependency injection
 - **AddressablesManager** — Loads assets asynchronously via Addressables
 - **ErrorManager** — Handles error logging and displays error-specific screens
+- **ObjectPooling** — Reuses objects for better performance via `IPoolableObject` interface
 
 ---
 

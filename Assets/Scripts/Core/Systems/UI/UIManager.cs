@@ -1,9 +1,7 @@
-using BaseArchitecture.Core;
 using Cysharp.Threading.Tasks;
 using System;
 using UnityEngine;
 using Zenject;
-using IFactory = BaseArchitecture.Core.IFactory;
 
 namespace BaseArchitecture.Core
 {
@@ -34,7 +32,7 @@ namespace BaseArchitecture.Core
 
     public class UIManager : IUIManager
     {
-        [Inject] private readonly IFactory _factory;
+        [Inject] private readonly ICustomFactory _factory;
         private DiContainer _diContainer;
 
         public void Initialize()

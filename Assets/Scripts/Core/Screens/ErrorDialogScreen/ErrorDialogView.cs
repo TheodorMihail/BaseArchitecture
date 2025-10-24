@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace BaseArchitecture.Core.Screens
 {
-    [AddressablePath("Screens/ErrorDialogView")]
+    [AddressablePath("Screens/ErrorDialogScreenView")]
     public class ErrorDialogView : View
     {
         [SerializeField] private TMP_Text _messageText;

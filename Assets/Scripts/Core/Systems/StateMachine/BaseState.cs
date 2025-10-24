@@ -6,7 +6,7 @@ namespace BaseArchitecture.Core
     {
         T Id { get; }
         event Action<(T stateId, object[] paramsList)> OnStateFinished;
-        void OnEnter();
+        void OnEnter(params object[] paramsList);
         void OnUpdate();
         void OnExit();
     }
@@ -21,7 +21,7 @@ namespace BaseArchitecture.Core
         public abstract T Id { get; }
         public event Action<(T stateId, object[] paramsList)> OnStateFinished;
 
-        public virtual void OnEnter() { }
+        public virtual void OnEnter(params object[] paramsList) { }
         public virtual void OnUpdate() { }
         public virtual void OnExit() { }
 

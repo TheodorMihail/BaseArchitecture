@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using Zenject;
 
 namespace BaseArchitecture.Core
@@ -56,13 +55,23 @@ namespace BaseArchitecture.Core
             _activeState?.OnUpdate();
         }
 
-        protected void TransitionToNextState(IState<T> nextState)
+        protected void SetState(T stateId, params object[] paramsList)
+        {
+            var state = _states.FirstOrDefault(s => s.Id.Equals(stateId));
+            if (state == null)
+                throw new Exception($"Could not set state {stateId}");
+
+            this.Log($"Transition to state: {stateId}");
+            TransitionToNextState(state, paramsList);
+        }
+        
+        protected void TransitionToNextState(IState<T> nextState, params object[] paramsList)
         {
             DisposeCurrentState();
 
             _activeState = nextState;
             _activeState.OnStateFinished += OnStateFinished;
-            _activeState.OnEnter();
+            _activeState.OnEnter(paramsList);
         }
 
         protected void DisposeCurrentState()
@@ -73,16 +82,6 @@ namespace BaseArchitecture.Core
             _activeState.OnStateFinished -= OnStateFinished;
             _activeState.OnExit();
             _activeState = default;
-        }
-
-        protected void SetState(T stateId)
-        {
-            var state = _states.FirstOrDefault(s => s.Id.Equals(stateId));
-            if (state == null)
-                throw new Exception($"Could not set state {stateId}");
-
-            Debug.Log($"Transition to state: {stateId}");
-            TransitionToNextState(state);
         }
     }
 }

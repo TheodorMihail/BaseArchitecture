@@ -22,11 +22,7 @@ namespace BaseArchitecture.Core
         /// <summary>
         /// Logs an error without showing dialog. Use for non-critical errors.
         /// </summary>
-        /// <typeparam name="T">The type of the calling class for context</typeparam>
-        /// <param name="message">Error message</param>
-        /// <param name="ex">Optional exception</param>
-        /// <param name="memberName">Automatically captured calling method name</param>
-        void LogError<T>(string message, Exception ex = null, [CallerMemberName] string memberName = "");
+        void LogError<T>(string message, Exception ex = null, bool includeMethod = false, [CallerMemberName] string memberName = "");
     }
     
     public class ErrorManager : IErrorManager
@@ -50,10 +46,11 @@ namespace BaseArchitecture.Core
         public void LogError<T>(
             string message,
             Exception ex = null,
+            bool includeMethod = false,
             [CallerMemberName] string memberName = "")
         {
             var typeName = typeof(T).Name;
-            var context = $"{typeName}.{memberName}";
+            var context = includeMethod ? $"{typeName}.{memberName}" : typeName;
 
             if (ex != null)
             {

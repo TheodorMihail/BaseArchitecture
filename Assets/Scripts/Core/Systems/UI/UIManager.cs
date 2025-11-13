@@ -1,10 +1,19 @@
 using Cysharp.Threading.Tasks;
 using System;
+using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using Zenject;
 
 namespace BaseArchitecture.Core
 {
+    public enum UIDisplayModes
+    {
+        Queue,     // Wait for existing active UIComponent to close
+        Parallel, // Allow multiple active UIComponents in category
+        Replace,  // Replace existing active UIComponent in category
+    }
+
     /// <summary>
     /// Manages UI screen and HUD lifecycle and presentation.
     /// Supports screens with return values and typed parameters.
@@ -15,32 +24,48 @@ namespace BaseArchitecture.Core
     {
         void UpdateDIContainer(DiContainer container);
 
-        UniTask ShowScreen<T>() where T : IScreen;
-        UniTask<TResult> ShowScreen<T, TResult>()
+        void ShowHUD<T>(UIDisplayModes showType = UIDisplayModes.Queue) where T : IHUD;
+
+        UniTask ShowScreen<T>(UIDisplayModes showType = UIDisplayModes.Queue) where T : IScreen;
+        UniTask<TResult> ShowScreen<T, TResult>(UIDisplayModes showType = UIDisplayModes.Queue)
             where T : IScreenWithResult<TResult>
             where TResult : IScreenResult;
-        UniTask ShowScreen<T, TParam>(TParam param)
+        UniTask ShowScreen<T, TParam>(TParam param, UIDisplayModes showType = UIDisplayModes.Queue)
             where T : IScreenWithParams<TParam>
             where TParam : IScreenParam;
-        UniTask<TResult> ShowScreen<T, TParam, TResult>(TParam param)
+        UniTask<TResult> ShowScreen<T, TParam, TResult>(TParam param, UIDisplayModes showType = UIDisplayModes.Queue)
             where T : IScreenWithParams<TParam>, IScreenWithResult<TResult>
             where TParam : IScreenParam
             where TResult : IScreenResult;
-
-        T ShowHUD<T>() where T : IHUD;
     }
 
     public class UIManager : IUIManager
     {
         [Inject] private readonly ICustomFactory _factory;
+
         private DiContainer _diContainer;
+        private Dictionary<string, List<IUIComponent>> _activeUIComponents;
+        private CancellationTokenSource _cancellationTokenSource;
 
         public void Initialize()
         {
+            _cancellationTokenSource = new CancellationTokenSource();
+            _activeUIComponents = new Dictionary<string, List<IUIComponent>>();
         }
 
         public void Dispose()
         {
+            _cancellationTokenSource?.CancelAndDispose();
+
+            foreach (var uiComponentList in _activeUIComponents.Values)
+            {
+                foreach (var uiComponent in uiComponentList)
+                {
+                    uiComponent.Dispose();
+                }
+            }
+            
+            _activeUIComponents.Clear();
         }
 
         public void UpdateDIContainer(DiContainer container)
@@ -48,85 +73,73 @@ namespace BaseArchitecture.Core
             _diContainer = container;
         }
 
-        public async UniTask ShowScreen<T>() where T : IScreen
+        public async void ShowHUD<T>(UIDisplayModes showType = UIDisplayModes.Parallel) where T : IHUD
         {
-            await ShowScreenInternal<T>();
+            T hud = await CreateUIComponentInstance<T>(showType);
+            hud.Initialize();
         }
 
-        public async UniTask<TResult> ShowScreen<T, TResult>()
+        #region Screens
+
+        public async UniTask ShowScreen<T>(UIDisplayModes showType = UIDisplayModes.Queue) where T : IScreen
+        {
+            var screen = await CreateUIComponentInstance<T>(showType);
+            screen.Initialize();
+
+            await screen.WaitForClosure();
+        }
+
+        public async UniTask<TResult> ShowScreen<T, TResult>(UIDisplayModes showType = UIDisplayModes.Queue)
             where T : IScreenWithResult<TResult>
             where TResult : IScreenResult
         {
-            return await ShowScreenInternal<T, TResult>();
+            var screen = await CreateUIComponentInstance<T>(showType);
+            screen.Initialize();
+
+            await screen.WaitForClosure();
+            return screen.GetResult();
         }
 
-        public async UniTask<TResult> ShowScreen<T, TParam, TResult>(TParam param)
+        public async UniTask ShowScreen<T, TParam>(TParam param, UIDisplayModes showType = UIDisplayModes.Queue)
+            where T : IScreenWithParams<TParam>
+            where TParam : IScreenParam
+        {
+            var screen = await CreateUIComponentInstance<T>(showType);
+            screen.SetParameter(param);
+            screen.Initialize();
+
+            await screen.WaitForClosure();
+        }
+
+        public async UniTask<TResult> ShowScreen<T, TParam, TResult>(TParam param, UIDisplayModes showType = UIDisplayModes.Queue)
             where T : IScreenWithParams<TParam>, IScreenWithResult<TResult>
             where TParam : IScreenParam
             where TResult : IScreenResult   
         {
-            return await ShowScreenInternal<T, TParam, TResult>(param);
-        }
-        
-        public async UniTask ShowScreen<T, TParam>(TParam param)
-            where T : IScreenWithParams<TParam>
-            where TParam : IScreenParam
-        {
-            await ShowScreenInternal<T, TParam>(param);
-        }
-
-        private async UniTask ShowScreenInternal<T>() where T : IScreen
-        {
-            var screen = CreateScreenInstance<T>();
-            await WaitForScreenClosure(screen);
-        }
-
-        private async UniTask<TResult> ShowScreenInternal<T, TResult>()
-            where T : IScreenWithResult<TResult>
-            where TResult : IScreenResult
-        {
-            var screen = CreateScreenInstance<T>();
-            await WaitForScreenClosure(screen);
-            return screen.GetResult();
-        }
-
-        private async UniTask ShowScreenInternal<T, TParam>(TParam param)
-            where T : IScreenWithParams<TParam>
-            where TParam : IScreenParam
-        {
-            var screen = CreateScreenInstance<T>();
+            var screen = await CreateUIComponentInstance<T>(showType);
             screen.SetParameter(param);
-            await WaitForScreenClosure(screen);
-        }
-
-        private async UniTask<TResult> ShowScreenInternal<T, TParam, TResult>(TParam param)
-            where T : IScreenWithParams<TParam>, IScreenWithResult<TResult>
-            where TParam : IScreenParam
-            where TResult : IScreenResult
-        {
-            var screen = CreateScreenInstance<T>();
-            screen.SetParameter(param);
-            await WaitForScreenClosure(screen);
-            return screen.GetResult();
-        }
-
-        private async UniTask WaitForScreenClosure<T>(T screen) where T : IScreen
-        {
             screen.Initialize();
+
             await screen.WaitForClosure();
+            return screen.GetResult();
         }
 
-        private T CreateUIComponentInstance<T>() where T : IUIComponent
+        #endregion
+
+        private async UniTask<T> CreateUIComponentInstance<T>(UIDisplayModes showType) where T : IUIComponent
         {
             string containerID;
+            string categoryKey;
 
             if (typeof(IScreen).IsAssignableFrom(typeof(T)))
             {
                 containerID = IScreen.ScreensContainerID;
+                categoryKey = IScreen.ScreenCategoryID;
             }
             else if (typeof(IHUD).IsAssignableFrom(typeof(T)))
             {
                 containerID = IHUD.HUDContainerID;
+                categoryKey = IHUD.HUDCategoryID;
             }
             else
             {
@@ -134,20 +147,54 @@ namespace BaseArchitecture.Core
             }
 
             var container = _diContainer.TryResolveId<Transform>(containerID);
+
+            if (!_activeUIComponents.ContainsKey(categoryKey))
+            {
+                _activeUIComponents[categoryKey] = new List<IUIComponent>();
+            }
+
+            var existingComponents = _activeUIComponents[categoryKey];
+
+            switch (showType)
+            {
+                case UIDisplayModes.Replace:
+                    foreach (var existing in existingComponents)
+                    {
+                        existing.Close();
+                    }
+                    existingComponents.Clear();
+                    break;
+
+                case UIDisplayModes.Parallel:
+                    foreach (var component in existingComponents)
+                    {
+                        if (component is T existing)
+                        {
+                            this.LogWarning($"UI Component of type {typeof(T).Name} is already active. Returning existing instance.");
+                            return existing;
+                        }
+                    }
+                    break;
+
+                case UIDisplayModes.Queue:
+                    await UniTask.WaitUntil(() => existingComponents.Count == 0, cancellationToken: _cancellationTokenSource.Token);
+                    break;
+            }
+
             T uiComponent = _factory.CreateNewObject<T>(container);
+            uiComponent.OnClosed += () => OnUIComponentClosed(uiComponent);
+            existingComponents.Add(uiComponent);
+
             return uiComponent;
         }
 
-        private T CreateScreenInstance<T>() where T : IScreen
+        private void OnUIComponentClosed(IUIComponent uiComponent)
         {
-            return CreateUIComponentInstance<T>();
-        }
-
-        public T ShowHUD<T>() where T : IHUD
-        {
-            T hud = CreateUIComponentInstance<T>();
-            hud.Initialize();
-            return hud;
+            string categoryKey = uiComponent.UICategoryID;
+            if (_activeUIComponents.ContainsKey(categoryKey))
+            {
+                _activeUIComponents[categoryKey].Remove(uiComponent);
+            }
         }
     }
 }

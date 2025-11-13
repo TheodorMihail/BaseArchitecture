@@ -12,7 +12,9 @@ namespace BaseArchitecture.Core
     /// </summary>
     public interface IUIComponent : IInitializable, IDisposable
     {
+        string UICategoryID { get; }
         string UIContainerID { get; }
+        event Action OnClosed;
         void Close();
     }
 
@@ -34,9 +36,10 @@ namespace BaseArchitecture.Core
         protected C _controller;
 
         public abstract string UIContainerID { get; }
+        public abstract string UICategoryID { get; }
+        public event Action OnClosed;
 
         protected abstract Transform GetContainer();
-        protected abstract string GetComponentTypeName();
 
         public async void Initialize()
         {
@@ -64,6 +67,7 @@ namespace BaseArchitecture.Core
             }
 
             Dispose();
+            OnClosed?.Invoke();
         }
 
         /// <summary>
@@ -89,7 +93,7 @@ namespace BaseArchitecture.Core
             }
             catch (Exception ex)
             {
-                _errorManager.LogError<UIComponent<M, V, C>>($"Error creating {GetComponentTypeName()} {GetType().Name}", ex);
+                _errorManager.LogError<UIComponent<M, V, C>>($"Error creating {UICategoryID} {GetType().Name}", ex);
                 await OnLoadFailed();
             }
         }
@@ -99,7 +103,7 @@ namespace BaseArchitecture.Core
         /// </summary>
         protected virtual async UniTask OnLoadFailed()
         {
-            await _errorManager.ShowErrorDialog($"Failed to load {GetComponentTypeName()}: {GetType().Name}");
+            await _errorManager.ShowErrorDialog($"Failed to load {UICategoryID}: {GetType().Name}");
             Close();
         }
 

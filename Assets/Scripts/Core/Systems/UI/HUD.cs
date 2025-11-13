@@ -10,7 +10,7 @@ namespace BaseArchitecture.Core
     public interface IHUD : IUIComponent
     {
         const string HUDContainerID = "HUDContainer";
-        const string HUDComponentName = "HUD";
+        const string HUDCategoryID = "HUD";
     }
 
     /// <summary>
@@ -26,8 +26,8 @@ namespace BaseArchitecture.Core
         [Inject] private readonly Transform _hudContainer;
 
         protected override Transform GetContainer() => _hudContainer;
-        protected override string GetComponentTypeName() => IHUD.HUDComponentName;
 
+        public override string UICategoryID => IHUD.HUDCategoryID;
         public override string UIContainerID => IHUD.HUDContainerID;
     }
 }

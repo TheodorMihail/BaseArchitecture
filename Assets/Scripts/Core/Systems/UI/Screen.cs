@@ -11,7 +11,7 @@ namespace BaseArchitecture.Core
     public interface IScreen : IUIComponent
     {
         const string ScreensContainerID = "ScreenContainer";
-        const string ScreenComponentName = "Screen";
+        const string ScreenCategoryID = "Screen";
 
         UniTask WaitForClosure();
     }
@@ -62,8 +62,8 @@ namespace BaseArchitecture.Core
         private UniTaskCompletionSource _screenClosedTcs = new UniTaskCompletionSource();
 
         protected override Transform GetContainer() => _screenContainer;
-        protected override string GetComponentTypeName() => IScreen.ScreenComponentName;
 
+        public override string UICategoryID => IScreen.ScreenCategoryID;
         public override string UIContainerID => IScreen.ScreensContainerID;
 
         public UniTask WaitForClosure()

@@ -15,6 +15,7 @@ It includes a few placeholder scenes on the surface, but under the hood it bring
 - 📦 **Addressables** — for efficient asset management
 - ♻️ **Object Pooling** — for optimized object reuse and reduced GC pressure
 - 🗂️ **Repository Pattern** — for centralized configuration and data management
+- 📬 **Message Bus** — for decoupled pub/sub communication between systems
 - 🛠️ **Extension Methods** — for cleaner code and reusable utilities
 - ⚡ **Assembly Definitions** — for faster compile times
 
@@ -60,6 +61,7 @@ Each scene is organized with:
 - **ErrorManager** — Handles error logging and displays error-specific screens
 - **ObjectPooling** — Reuses objects for better performance via `IPoolableObject` interface
 - **Repository** — Centralizes configuration objects for easy access via `IRepositoryObject` interface
+- **MessageBus** — Publish/subscribe pattern for decoupled system communication via `IMessageObject` interface
 
 ### 🧰 Extension Methods
 

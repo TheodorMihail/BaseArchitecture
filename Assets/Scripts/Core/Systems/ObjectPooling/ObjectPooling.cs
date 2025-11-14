@@ -112,7 +112,7 @@ namespace BaseArchitecture.Core
                     var obj = pool.Dequeue();
                     if (obj != null)
                     {
-                        GameObject.Destroy(obj.gameObject);
+                        GameObject.DestroyImmediate(obj.gameObject);
                     }
                 }
 
@@ -122,10 +122,15 @@ namespace BaseArchitecture.Core
 
         public void Prewarm<T>(T prefab, int count, Transform parent = null) where T : MonoBehaviour, IPoolableObject
         {
+            List<T> tempList = new List<T>();
             for (int i = 0; i < count; i++)
             {
-                T instance = Get(prefab, parent);
-                Return(instance);
+                tempList.Add(Get(prefab, parent));
+            }
+            
+            for (int i = 0; i < count; i++)
+            {
+                Return(tempList[i]);
             }
         }
     }

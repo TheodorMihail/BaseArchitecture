@@ -8,9 +8,7 @@ It includes a few placeholder scenes on the surface, but under the hood it bring
 
 - ✅ **SOLID principles** — to ensure clear responsibilities and maintainable code
 - 🎮 **Flexible MVC pattern** — with optional typed parameters and results
-- 📺 **Dual UI System** — Screens for blocking flows and HUDs for persistent UI
 - 🔁 **State Machines** — for predictable, extensible gameplay flow
-- 🧠 **Zenject (Dependency Injection)** — for decoupling and testability
 - 🔄 **UniTask** — for clean async/await operations
 - 📦 **Addressables** — for efficient asset management
 - ♻️ **Object Pooling** — for optimized object reuse and reduced GC pressure
@@ -68,6 +66,15 @@ Each scene is organized with:
 - **LoggingExtensions** — Type-aware logging with `this.Log()`, `this.LogWarning()`, `this.LogError()`
 - **UIExtensions** — Async UI animations with `FadeToAsync()` and `CountdownAsync()` for smooth transitions
 - **CancellationTokenSourceExtensions** — Safe cancellation with `CancelAndDispose()` helper method
+
+### 🧪 Testing
+
+Comprehensive test coverage using Unity Test Framework, NUnit, and Zenject Test Framework:
+
+- **EditMode** — MessageBus, Repository
+- **PlayMode** — CustomFactory, ObjectPooling
+
+Tests are editor-only and excluded from player builds.
 
 ---
 

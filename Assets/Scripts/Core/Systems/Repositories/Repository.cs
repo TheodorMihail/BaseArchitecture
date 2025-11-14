@@ -8,6 +8,7 @@ namespace BaseArchitecture.Core
         void AddObject(IRepositoryObject obj);
         void RemoveObject(IRepositoryObject obj);
         IRepositoryObject GetObject(string id);
+        T GetObject<T>(string id) where T : IRepositoryObject;
     }
 
     public class Repository : IRepository
@@ -40,8 +41,25 @@ namespace BaseArchitecture.Core
 
         public IRepositoryObject GetObject(string id)
         {
-            _objects.TryGetValue(id, out var obj);
+            if(!_objects.TryGetValue(id, out var obj))
+            {
+                this.LogError($"Object with ID '{id}' not found.");
+            }
+
             return obj;
+        }
+
+        public T GetObject<T>(string id) where T : IRepositoryObject
+        {
+            var obj = GetObject(id);
+
+            if (obj is T typedObj)
+            {
+                return typedObj;
+            }
+
+            this.LogError($"Object with ID '{id}' cannot be cast to type {typeof(T).Name}.");
+            return default;
         }
     }
 }

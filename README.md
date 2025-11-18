@@ -16,6 +16,7 @@ It includes a few placeholder scenes on the surface, but under the hood it bring
 - 📬 **Message Bus** — for decoupled pub/sub communication between systems
 - 🛠️ **Extension Methods** — for cleaner code and reusable utilities
 - ⚡ **Assembly Definitions** — for faster compile times
+- 🧪 **Comprehensive test coverage** — with EditMode and PlayMode tests
 
 ---
 

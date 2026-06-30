@@ -6,5 +6,11 @@
   "unity": "6000.0",
   "author": {
     "name": "Theodor Mihail"
+  },
+  "dependencies": {
+    "com.svermeulen.extenject": "9.2.0",
+    "com.cysharp.unitask": "2.5.10",
+    "com.neuecc.unirx": "7.1.0",
+    "com.unity.addressables": "2.7.4"
   }
 }

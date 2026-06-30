@@ -1,0 +1,10 @@
+{
+  "name": "com.theodormihail.basearchitecture",
+  "version": "1.0.0",
+  "displayName": "Base Architecture",
+  "description": "Base architecture package for Unity projects",
+  "unity": "6000.0",
+  "author": {
+    "name": "Theodor Mihail"
+  }
+}

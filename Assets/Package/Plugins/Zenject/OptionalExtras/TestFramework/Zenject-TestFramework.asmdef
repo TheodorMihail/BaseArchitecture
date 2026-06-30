@@ -1,5 +1,6 @@
 {
     "name": "Zenject-TestFramework",
+    "rootNamespace": "",
     "references": [
         "Zenject",
         "UnityEngine.TestRunner",
@@ -15,9 +16,7 @@
         "nunit.framework.dll"
     ],
     "autoReferenced": false,
-    "defineConstraints": [
-        "UNITY_INCLUDE_TESTS"
-    ],
+    "defineConstraints": [],
     "versionDefines": [],
     "noEngineReferences": false
 }

@@ -79,6 +79,30 @@ Tests are editor-only and excluded from player builds.
 
 ---
 
-<h2>🔧 Using as Git Submodule</h2>
+<h2>📥 Installation</h2>
 
-This repository is designed to be used as a **git submodule** in your Unity game projects, allowing you to share the core framework across multiple games while keeping game-specific code separate.
+BaseArchitecture is installed as a **Unity package (UPM)** from this Git repo. The package lives in the [`Assets/Package`](Assets/Package) folder, so the URL must include `?path=/Assets/Package`.
+
+**1. Add the OpenUPM scoped registry** to your project's `Packages/manifest.json` (the dependencies below are published on OpenUPM, not the Unity registry):
+
+```json
+"scopedRegistries": [
+  {
+    "name": "OpenUPM",
+    "url": "https://package.openupm.com",
+    "scopes": [
+      "com.svermeulen.extenject",
+      "com.cysharp.unitask",
+      "com.neuecc.unirx"
+    ]
+  }
+]
+```
+
+**2. Add the package**:
+
+```
+https://github.com/TheodorMihail/BaseArchitecture.git?path=/Assets/Package
+```
+
+Dependencies (Extenject, UniTask, UniRx, Addressables) resolve automatically once the registry is set. Append `#v1.0.0` to the URL to pin a version.

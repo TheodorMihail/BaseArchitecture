@@ -1,17 +1,29 @@
 {
+  "scopedRegistries": [
+    {
+      "name": "OpenUPM",
+      "url": "https://package.openupm.com",
+      "scopes": [
+        "com.svermeulen.extenject",
+        "com.cysharp.unitask",
+        "com.neuecc.unirx"
+      ]
+    }
+  ],
   "dependencies": {
-    "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
-    "com.unity.addressables": "2.3.16",
-    "com.unity.ai.navigation": "2.0.6",
-    "com.unity.collab-proxy": "2.7.1",
+    "com.cysharp.unitask": "2.5.10",
+    "com.svermeulen.extenject": "9.1.0",
+    "com.unity.addressables": "2.7.4",
+    "com.unity.ai.navigation": "2.0.9",
+    "com.unity.collab-proxy": "2.9.3",
     "com.unity.feature.2d": "2.0.1",
-    "com.unity.ide.rider": "3.0.31",
-    "com.unity.ide.visualstudio": "2.0.22",
+    "com.unity.ide.rider": "3.0.38",
+    "com.unity.ide.visualstudio": "2.0.23",
     "com.unity.multiplayer.center": "1.0.0",
-    "com.unity.test-framework": "1.4.6",
-    "com.unity.timeline": "1.8.7",
+    "com.unity.test-framework": "1.6.0",
+    "com.unity.timeline": "1.8.9",
     "com.unity.ugui": "2.0.0",
-    "com.unity.visualscripting": "1.9.5",
+    "com.unity.visualscripting": "1.9.7",
     "com.unity.modules.accessibility": "1.0.0",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
@@ -44,5 +56,8 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
-  }
+  },
+  "testables": [
+    "com.svermeulen.extenject"
+  ]
 }

@@ -127,15 +127,16 @@ namespace BaseArchitecture.Core
 
         public void Prewarm<T>(T prefab, int count, Transform parent = null) where T : MonoBehaviour, IPoolableObject
         {
-            List<T> tempList = new List<T>();
-            for (int i = 0; i < count; i++)
-            {
-                tempList.Add(Get(prefab, parent));
-            }
+            int poolKey = prefab.GetInstanceID();
+            if (!_pools.ContainsKey(poolKey))
+                _pools[poolKey] = new Queue<MonoBehaviour>();
 
             for (int i = 0; i < count; i++)
             {
-                Return(tempList[i]);
+                var instance = _factory.CreateFromPrefab(prefab, parent);
+                instance.gameObject.SetActive(false);
+                instance.transform.SetParent(_poolContainer);
+                _pools[poolKey].Enqueue(instance);
             }
         }
     }

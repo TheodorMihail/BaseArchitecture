@@ -29,9 +29,9 @@ namespace BaseArchitecture.Core
         void ClearAll();
 
         /// <summary>
-        /// Clears a specific pool by prefab name.
+        /// Clears a specific pool for the given prefab.
         /// </summary>
-        void ClearPool(string poolKey);
+        void ClearPool<T>(T prefab) where T : MonoBehaviour, IPoolableObject;
 
         /// <summary>
         /// Pre-warms a pool by creating instances in advance.
@@ -44,8 +44,10 @@ namespace BaseArchitecture.Core
         [Inject] private readonly ICustomFactory _factory;
         [Inject] private readonly Transform _poolContainer;
 
-        private readonly Dictionary<string, Queue<MonoBehaviour>> _pools = new Dictionary<string, Queue<MonoBehaviour>>();
-        private readonly HashSet<MonoBehaviour> _activeObjects = new HashSet<MonoBehaviour>();
+        private readonly Dictionary<int, Queue<MonoBehaviour>> _pools = new Dictionary<int, Queue<MonoBehaviour>>();
+        // Maps each active instance back to its pool key (prefab.GetInstanceID()) for safe Return().
+        private readonly Dictionary<MonoBehaviour, int> _activeObjects = new Dictionary<MonoBehaviour, int>();
+
         public void Dispose()
         {
             ClearAll();
@@ -53,7 +55,7 @@ namespace BaseArchitecture.Core
 
         public T Get<T>(T prefab, Transform parent = null) where T : MonoBehaviour, IPoolableObject
         {
-            string poolKey = prefab.name;
+            int poolKey = prefab.GetInstanceID();
             T instance;
 
             if (_pools.TryGetValue(poolKey, out var pool) && pool.Count > 0)
@@ -65,28 +67,23 @@ namespace BaseArchitecture.Core
             else
             {
                 instance = _factory.CreateFromPrefab(prefab, parent);
-                instance.name = poolKey;
             }
 
-            _activeObjects.Add(instance);
+            _activeObjects[instance] = poolKey;
             instance.OnSpawned();
             return instance;
         }
 
         public void Return<T>(T instance) where T : MonoBehaviour, IPoolableObject
         {
-            if (instance == null || !_activeObjects.Contains(instance))
+            if (instance == null || !_activeObjects.TryGetValue(instance, out int poolKey))
                 return;
 
             _activeObjects.Remove(instance);
             instance.OnDespawned();
 
-            string poolKey = instance.name;
-
             if (!_pools.ContainsKey(poolKey))
-            {
                 _pools[poolKey] = new Queue<MonoBehaviour>();
-            }
 
             _pools[poolKey].Enqueue(instance);
             instance.gameObject.SetActive(false);
@@ -95,15 +92,20 @@ namespace BaseArchitecture.Core
 
         public void ClearAll()
         {
-            foreach (var poolKey in new List<string>(_pools.Keys))
+            foreach (var poolKey in new List<int>(_pools.Keys))
             {
-                ClearPool(poolKey);
+                ClearPoolByKey(poolKey);
             }
 
             _activeObjects.Clear();
         }
 
-        public void ClearPool(string poolKey)
+        public void ClearPool<T>(T prefab) where T : MonoBehaviour, IPoolableObject
+        {
+            ClearPoolByKey(prefab.GetInstanceID());
+        }
+
+        private void ClearPoolByKey(int poolKey)
         {
             if (_pools.TryGetValue(poolKey, out var pool))
             {
@@ -112,7 +114,7 @@ namespace BaseArchitecture.Core
                     var obj = pool.Dequeue();
                     if (obj != null)
                     {
-                        GameObject.DestroyImmediate(obj.gameObject);
+                        GameObject.Destroy(obj.gameObject);
                     }
                 }
 
@@ -127,7 +129,7 @@ namespace BaseArchitecture.Core
             {
                 tempList.Add(Get(prefab, parent));
             }
-            
+
             for (int i = 0; i < count; i++)
             {
                 Return(tempList[i]);

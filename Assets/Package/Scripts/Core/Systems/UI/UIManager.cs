@@ -24,7 +24,7 @@ namespace BaseArchitecture.Core
     {
         void UpdateDIContainer(DiContainer container);
 
-        void ShowHUD<T>(UIDisplayModes showType = UIDisplayModes.Queue) where T : IHUD;
+        void ShowHUD<T>(UIDisplayModes showType = UIDisplayModes.Parallel) where T : IHUD;
 
         UniTask ShowScreen<T>(UIDisplayModes showType = UIDisplayModes.Queue) where T : IScreen;
         UniTask<TResult> ShowScreen<T, TResult>(UIDisplayModes showType = UIDisplayModes.Queue)

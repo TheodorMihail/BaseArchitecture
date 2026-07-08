@@ -115,10 +115,9 @@ namespace BaseArchitecture.Tests
         {
             _repository.GetObject<TestRepositoryObject>("nonexistent");
             LogAssert.Expect(LogType.Error, "[Repository] [Error] Object with ID 'nonexistent' not found.");
-            LogAssert.Expect(LogType.Error, "[Repository] [Error] Object with ID 'nonexistent' cannot be cast to type TestRepositoryObject.");
         }
 
-        
+
         [Test]
         public void GetObjectGeneric_WithInvalidType_ReturnsDefaultAndLogsError()
         {
@@ -126,9 +125,9 @@ namespace BaseArchitecture.Tests
             _repository.AddObject(testObject);
             var testObject2 = new TestRepositoryObject2 { ID = "test2" };
             _repository.AddObject(testObject2);
-            
+
             _repository.GetObject<TestRepositoryObject2>("test1");
-            LogAssert.Expect(LogType.Error, "[Repository] [Error] Object with ID 'test1' cannot be cast to type TestRepositoryObject2.");
+            LogAssert.Expect(LogType.Error, "[Repository] [Error] Object with ID 'test1' is not of type TestRepositoryObject2, it is TestRepositoryObject.");
         }
 
         [Test]

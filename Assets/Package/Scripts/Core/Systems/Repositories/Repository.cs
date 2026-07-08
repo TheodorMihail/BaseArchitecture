@@ -25,10 +25,13 @@ namespace BaseArchitecture.Core
 
         public void AddObject(IRepositoryObject obj)
         {
-            if (!_objects.ContainsKey(obj.ObjectID))
+            if (_objects.ContainsKey(obj.ObjectID))
             {
-                _objects.Add(obj.ObjectID, obj);
+                this.LogWarning($"Object with ID '{obj.ObjectID}' already exists. Ignoring duplicate.");
+                return;
             }
+
+            _objects.Add(obj.ObjectID, obj);
         }
 
         public void RemoveObject(IRepositoryObject obj)
@@ -51,14 +54,16 @@ namespace BaseArchitecture.Core
 
         public T GetObject<T>(string id) where T : IRepositoryObject
         {
-            var obj = GetObject(id);
-
-            if (obj is T typedObj)
+            if (!_objects.TryGetValue(id, out var obj))
             {
-                return typedObj;
+                this.LogError($"Object with ID '{id}' not found.");
+                return default;
             }
 
-            this.LogError($"Object with ID '{id}' cannot be cast to type {typeof(T).Name}.");
+            if (obj is T typedObj)
+                return typedObj;
+
+            this.LogError($"Object with ID '{id}' is not of type {typeof(T).Name}, it is {obj.GetType().Name}.");
             return default;
         }
     }

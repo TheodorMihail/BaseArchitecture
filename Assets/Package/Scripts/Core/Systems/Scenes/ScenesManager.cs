@@ -1,4 +1,3 @@
-using Cysharp.Threading.Tasks;
 using System;
 using System.Threading;
 using UnityEngine;
@@ -48,11 +47,14 @@ namespace BaseArchitecture.Core
             Debug.Log($"Load Scene: {sceneName}");
             OnSceneLoadStarted?.Invoke(sceneName);
 
+            var token = _cancellationTokenSource.Token;
             var asyncOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName);
-            asyncOperation.WithCancellation(_cancellationTokenSource.Token);
 
             asyncOperation.completed += (obj) =>
             {
+                if (token.IsCancellationRequested)
+                    return;
+
                 Debug.Log($"Load Scene: {sceneName} - Scene loaded Finished!");
                 var scene = UnityEngine.SceneManagement.SceneManager.GetSceneByName(sceneName);
                 UnityEngine.SceneManagement.SceneManager.SetActiveScene(scene);

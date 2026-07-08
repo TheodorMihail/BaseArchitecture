@@ -148,9 +148,9 @@ namespace BaseArchitecture.Tests
             var obj2 = _objectPooling.Get(prefabComponent);
             var obj3 = _objectPooling.Get(prefabComponent);
 
-            Assert.AreEqual(2, obj1.SpawnCount);
-            Assert.AreEqual(2, obj2.SpawnCount);
-            Assert.AreEqual(2, obj3.SpawnCount);
+            Assert.AreEqual(1, obj1.SpawnCount);
+            Assert.AreEqual(1, obj2.SpawnCount);
+            Assert.AreEqual(1, obj3.SpawnCount);
 
             yield return null;
         }
@@ -182,7 +182,7 @@ namespace BaseArchitecture.Tests
 
             yield return null;
 
-            _objectPooling.ClearPool(_testPrefab.name);
+            _objectPooling.ClearPool(prefabComponent);
 
             yield return null;
 

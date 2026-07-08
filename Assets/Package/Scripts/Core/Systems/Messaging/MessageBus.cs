@@ -37,8 +37,12 @@ namespace BaseArchitecture.Core
             var messageType = typeof(TMessage);
 
             if (!_subscribers.ContainsKey(messageType))
-            {
                 _subscribers[messageType] = new List<object>();
+
+            if (_subscribers[messageType].Contains(handler))
+            {
+                this.LogWarning($"Handler already subscribed for {typeof(TMessage).Name}. Ignoring duplicate.");
+                return;
             }
 
             _subscribers[messageType].Add(handler);
@@ -64,18 +68,17 @@ namespace BaseArchitecture.Core
             var messageType = typeof(TMessage);
 
             if (!_subscribers.ContainsKey(messageType))
-            {
                 return;
-            }
 
-            var handlers = _subscribers[messageType];
+            // Snapshot before dispatch so Subscribe/Unsubscribe calls from within
+            // handlers don't corrupt iteration or cause double-invocations.
+            var snapshot = new List<object>(_subscribers[messageType]);
 
-            for (int i = handlers.Count - 1; i >= 0; i--)
+            foreach (var handler in snapshot)
             {
                 try
                 {
-                    var typedHandler = (Action<TMessage>)handlers[i];
-                    typedHandler.Invoke(message);
+                    ((Action<TMessage>)handler).Invoke(message);
                 }
                 catch (Exception ex)
                 {

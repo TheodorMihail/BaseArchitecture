@@ -76,7 +76,7 @@ namespace BaseArchitecture.Core
 
         public void Return<T>(T instance) where T : MonoBehaviour, IPoolableObject
         {
-            if (instance == null || !_activeObjects.TryGetValue(instance, out int poolKey))
+            if (instance is null || !_activeObjects.TryGetValue(instance, out int poolKey))
                 return;
 
             _activeObjects.Remove(instance);
@@ -114,7 +114,10 @@ namespace BaseArchitecture.Core
                     var obj = pool.Dequeue();
                     if (obj != null)
                     {
-                        GameObject.Destroy(obj.gameObject);
+                        if (Application.isPlaying)
+                            GameObject.Destroy(obj.gameObject);
+                        else
+                            GameObject.DestroyImmediate(obj.gameObject);
                     }
                 }
 

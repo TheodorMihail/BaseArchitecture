@@ -182,7 +182,7 @@ namespace BaseArchitecture.Tests
 
             yield return null;
 
-            _objectPooling.ClearPool(_testPrefab.name);
+            _objectPooling.ClearPool(prefabComponent);
 
             yield return null;
 

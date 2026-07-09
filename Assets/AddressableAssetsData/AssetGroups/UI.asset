@@ -14,13 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_GroupName: UI
   m_GUID: 1aece37d577eee54bad47afdfbc63499
-  m_SerializeEntries:
-  - m_GUID: d232e89ed9ce8a84d950d87121879148
-    m_Address: Screens/ErrorDialogView
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Screens
-    FlaggedDuringContentUpdateRestriction: 0
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 71e42ca6e7e044f42817e41a462a5d3f, type: 2}
   m_SchemaSet:

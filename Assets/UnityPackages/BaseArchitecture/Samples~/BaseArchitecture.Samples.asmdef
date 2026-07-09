@@ -1,0 +1,22 @@
+{
+    "name": "BaseArchitecture.Samples",
+    "rootNamespace": "BaseArchitecture.Samples",
+    "references": [
+        "Zenject",
+        "UniTask",
+        "UniTask.DOTween",
+        "Unity.Addressables",
+        "Unity.ResourceManager",
+        "Unity.TextMeshPro",
+        "BaseArchitecture.Core"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

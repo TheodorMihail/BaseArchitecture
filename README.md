@@ -57,7 +57,6 @@ Each scene is organized with:
 - **ScenesManager** — Handles scene transitions with async operations
 - **Factory** — Creates objects and instantiates prefabs with dependency injection
 - **AddressablesManager** — Loads assets asynchronously via Addressables
-- **ErrorManager** — Handles error logging and displays error-specific screens
 - **ObjectPooling** — Reuses objects for better performance via `IPoolableObject` interface
 - **Repository** — Centralizes configuration objects for easy access via `IRepositoryObject` interface
 - **MessageBus** — Publish/subscribe pattern for decoupled system communication via `IMessageObject` interface
@@ -67,6 +66,14 @@ Each scene is organized with:
 - **LoggingExtensions** — Type-aware logging with `this.Log()`, `this.LogWarning()`, `this.LogError()`
 - **UIExtensions** — Async UI animations with `FadeToAsync()` and `CountdownAsync()` for smooth transitions
 - **CancellationTokenSourceExtensions** — Safe cancellation with `CancelAndDispose()` helper method
+
+### 🪄 Editor Tools
+
+- **UI Component Creator** (`BaseArchitecture > Create UI Component...`) — Scaffolds the Model/View/Controller/Screen or HUD scripts for a new UI component.
+
+### 📚 Samples
+
+Example content importable via **Package Manager → Base Architecture → Samples**.
 
 ### 🧪 Testing
 
@@ -81,7 +88,7 @@ Tests are editor-only and excluded from player builds.
 
 <h2>📥 Installation</h2>
 
-BaseArchitecture is installed as a **Unity package (UPM)** from this Git repo. The package lives in the [`Assets/Package`](Assets/Package) folder, so the URL must include `?path=/Assets/Package`.
+BaseArchitecture is installed as a **Unity package (UPM)** from this Git repo. The package lives in the [`Assets/UnityPackages/BaseArchitecture`](Assets/UnityPackages/BaseArchitecture) folder, so the URL must include `?path=/Assets/UnityPackages/BaseArchitecture`.
 
 **1. Add the OpenUPM scoped registry** to your project's `Packages/manifest.json` (the dependencies below are published on OpenUPM, not the Unity registry):
 
@@ -92,8 +99,7 @@ BaseArchitecture is installed as a **Unity package (UPM)** from this Git repo. T
     "url": "https://package.openupm.com",
     "scopes": [
       "com.svermeulen.extenject",
-      "com.cysharp.unitask",
-      "com.neuecc.unirx"
+      "com.cysharp.unitask"
     ]
   }
 ]
@@ -102,7 +108,9 @@ BaseArchitecture is installed as a **Unity package (UPM)** from this Git repo. T
 **2. Add the package**:
 
 ```
-https://github.com/TheodorMihail/BaseArchitecture.git?path=/Assets/Package
+https://github.com/TheodorMihail/BaseArchitecture.git?path=/Assets/UnityPackages/BaseArchitecture
 ```
 
-Dependencies (Extenject, UniTask, UniRx, Addressables) resolve automatically once the registry is set. Append `#v1.0.0` to the URL to pin a version.
+Dependencies (Extenject, UniTask, Addressables) resolve automatically once the registry is set. Append `#v1.0.0` to the URL to pin a version.
+
+**3. Import samples (optional)** via **Package Manager → Base Architecture → Samples → Error Dialog Screen → Import**.

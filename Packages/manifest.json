@@ -5,8 +5,7 @@
       "url": "https://package.openupm.com",
       "scopes": [
         "com.svermeulen.extenject",
-        "com.cysharp.unitask",
-        "com.neuecc.unirx"
+        "com.cysharp.unitask"
       ]
     }
   ],

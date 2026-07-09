@@ -20,8 +20,6 @@ namespace BaseArchitecture.Core
 
     public class AddressablesManager : IAddressablesManager
     {
-        [Inject] private readonly IErrorManager _errorManager;
-
         private readonly Dictionary<string, AsyncOperationHandle<GameObject>> _handles =
             new Dictionary<string, AsyncOperationHandle<GameObject>>();
 
@@ -48,7 +46,7 @@ namespace BaseArchitecture.Core
 
                 if (handle.Status != AsyncOperationStatus.Succeeded)
                 {
-                    _errorManager.LogError<AddressablesManager>($"Failed to load prefab: {addressablePath}");
+                    this.LogError($"Failed to load prefab: {addressablePath}");
                     return null;
                 }
 
@@ -57,7 +55,7 @@ namespace BaseArchitecture.Core
             }
             catch (Exception ex)
             {
-                _errorManager.LogError<AddressablesManager>($"Exception loading prefab: {addressablePath}", ex);
+                this.LogError($"Exception loading prefab: {addressablePath}", ex);
                 return null;
             }
         }

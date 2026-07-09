@@ -29,7 +29,6 @@ namespace BaseArchitecture.Core
     {
         [Inject] protected readonly ICustomFactory _factory;
         [Inject] protected readonly IAddressablesManager _addressablesManager;
-        [Inject] protected readonly IErrorManager _errorManager;
 
         protected M _model;
         protected V _view;
@@ -82,7 +81,7 @@ namespace BaseArchitecture.Core
 
                 if (prefab == null)
                 {
-                    await OnLoadFailed();
+                    await OnLoadFailed("Prefab could not be loaded!");
                     return;
                 }
 
@@ -93,17 +92,16 @@ namespace BaseArchitecture.Core
             }
             catch (Exception ex)
             {
-                _errorManager.LogError<UIComponent<M, V, C>>($"Error creating {UICategoryID} {GetType().Name}", ex);
-                await OnLoadFailed();
+                await OnLoadFailed(ex.Message);
             }
         }
 
         /// <summary>
         /// Called when MVC loading fails. Override to provide custom failure handling.
         /// </summary>
-        protected virtual async UniTask OnLoadFailed()
+        protected virtual async UniTask OnLoadFailed(string error)
         {
-            await _errorManager.ShowErrorDialog($"Failed to load {UICategoryID}: {GetType().Name}");
+           this.LogError($"Failed to load {UICategoryID}: {GetType().Name} \n {error}");
             Close();
         }
 

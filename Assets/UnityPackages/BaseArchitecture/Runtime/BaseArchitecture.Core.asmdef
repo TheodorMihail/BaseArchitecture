@@ -7,8 +7,7 @@
         "UniTask.DOTween",
         "Unity.Addressables",
         "Unity.ResourceManager",
-        "Unity.TextMeshPro",
-        "Newtonsoft.Json"
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

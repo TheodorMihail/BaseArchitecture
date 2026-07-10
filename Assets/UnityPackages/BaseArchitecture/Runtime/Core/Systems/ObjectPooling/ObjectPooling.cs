@@ -76,7 +76,7 @@ namespace BaseArchitecture.Core
 
         public void Return<T>(T instance) where T : MonoBehaviour, IPoolableObject
         {
-            if (instance is null || !_activeObjects.TryGetValue(instance, out int poolKey))
+            if (instance == null || !_activeObjects.TryGetValue(instance, out int poolKey))
                 return;
 
             _activeObjects.Remove(instance);

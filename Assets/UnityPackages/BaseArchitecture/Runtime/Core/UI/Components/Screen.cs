@@ -27,25 +27,9 @@ namespace BaseArchitecture.Core
     }
 
     /// <summary>
-    /// Screen interface that supports receiving typed parameters.
-    /// Parameters are set before initialization.
-    /// </summary>
-    public interface IScreenWithParams<TParam> : IScreen
-        where TParam : IScreenParam
-    {
-        void SetParameter(TParam parameter);
-    }
-
-    /// <summary>
     /// Marker interface for screen result data structures.
     /// </summary>
     public interface IScreenResult { }
-
-    /// <summary>
-    /// Marker interface for screen parameter data structures.
-    /// </summary>
-    public interface IScreenParam { }
-
 
     /// <summary>
     /// Base Screen class that automatically creates and manages Model, View, and Controller.
@@ -77,28 +61,4 @@ namespace BaseArchitecture.Core
             base.Close();
         }
     }
-    
-    /// <summary>
-    /// Extended Screen class that supports receiving typed parameters during initialization.
-    /// </summary>
-    public abstract class ScreenWithParams<M, V, C, TParam> : Screen<M, V, C>, IScreenWithParams<TParam>
-        where M : IModel
-        where V : IView
-        where C : IController
-        where TParam : IScreenParam
-    {
-        private TParam _parameter;
-    
-        public void SetParameter(TParam parameter) => _parameter = parameter;
-    
-        protected override void MVCCreated()
-        {
-            base.MVCCreated();
-        
-            if (_model is IModelWithParams<TParam> modelWithParams)
-            {
-                modelWithParams.InitializeWithParameters(_parameter);
-            }
-        }
-    }   
 }

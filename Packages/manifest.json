@@ -13,6 +13,7 @@
     "com.cysharp.unitask": "2.5.10",
     "com.svermeulen.extenject": "9.1.0",
     "com.unity.addressables": "2.7.4",
+    "com.unity.nuget.newtonsoft-json": "3.2.1",
     "com.unity.ai.navigation": "2.0.9",
     "com.unity.collab-proxy": "2.9.3",
     "com.unity.feature.2d": "2.0.1",

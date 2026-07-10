@@ -2,9 +2,9 @@ using static BaseArchitecture.Core.Screens.ErrorDialogScreen;
 
 namespace BaseArchitecture.Core.Screens
 {
-    public class ErrorDialogScreen : ScreenWithParams<ErrorDialogModel, ErrorDialogView, ErrorDialogController, ErrorDialogScreenParams>
+    public class ErrorDialogScreen : Screen<ErrorDialogModel, ErrorDialogView, ErrorDialogController>
     {
-        public struct ErrorDialogScreenParams : IScreenParam
+        public struct ErrorDialogScreenParams
         {
             public string Message { get; set; }
         }

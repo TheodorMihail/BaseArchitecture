@@ -42,8 +42,8 @@ namespace BaseArchitecture.Tests
 
             _repository.AddObjects(objects);
 
-            var retrieved1 = _repository.GetObject<TestRepositoryObject>("obj1");
-            var retrieved2 = _repository.GetObject<TestRepositoryObject>("obj2");
+            var retrieved1 = _repository.Get<TestRepositoryObject>("obj1");
+            var retrieved2 = _repository.Get<TestRepositoryObject>("obj2");
 
             Assert.IsNotNull(retrieved1);
             Assert.IsNotNull(retrieved2);
@@ -57,7 +57,7 @@ namespace BaseArchitecture.Tests
             var testObject = new TestRepositoryObject { ID = "test1", Name = "Test Object" };
             _repository.AddObject(testObject);
 
-            var retrieved = _repository.GetObject<TestRepositoryObject>("test1");
+            var retrieved = _repository.Get<TestRepositoryObject>("test1");
 
             Assert.IsNotNull(retrieved);
             Assert.AreEqual("test1", retrieved.ID);
@@ -70,7 +70,7 @@ namespace BaseArchitecture.Tests
             var testObject = new TestRepositoryObject { ID = "test1", Name = "Test Object" };
             _repository.AddObject(testObject);
 
-            _repository.GetObject("nonexistent");
+            _repository.Get<TestRepositoryObject>("nonexistent");
             LogAssert.Expect(LogType.Error, "[Repository] [Error] Object with ID 'nonexistent' not found.");
         }
 
@@ -84,7 +84,7 @@ namespace BaseArchitecture.Tests
             };
             _repository.AddObjects(objects);
 
-            var retrieved = _repository.GetObject<TestRepositoryObject>("duplicate");
+            var retrieved = _repository.Get<TestRepositoryObject>("duplicate");
 
             Assert.IsNotNull(retrieved);
             Assert.AreEqual("First", retrieved.Name);
@@ -93,7 +93,7 @@ namespace BaseArchitecture.Tests
         [Test]
         public void GetObject_WithEmptyRepository_ReturnsNullAndLogsError()
         {
-            Assert.IsNull(_repository.GetObject("any"));
+            Assert.IsNull(_repository.Get<TestRepositoryObject>("any"));
             LogAssert.Expect(LogType.Error, "[Repository] [Error] Object with ID 'any' not found.");
         }
 
@@ -103,7 +103,7 @@ namespace BaseArchitecture.Tests
             var testObject = new TestRepositoryObject { ID = "typed1", Name = "Typed Object" };
             _repository.AddObject(testObject);
 
-            var retrieved = _repository.GetObject<TestRepositoryObject>("typed1");
+            var retrieved = _repository.Get<TestRepositoryObject>("typed1");
 
             Assert.IsNotNull(retrieved);
             Assert.AreEqual("typed1", retrieved.ID);
@@ -113,7 +113,7 @@ namespace BaseArchitecture.Tests
         [Test]
         public void GetObjectGeneric_WithInvalidID_ReturnsDefaultAndLogsError()
         {
-            _repository.GetObject<TestRepositoryObject>("nonexistent");
+            _repository.Get<TestRepositoryObject>("nonexistent");
             LogAssert.Expect(LogType.Error, "[Repository] [Error] Object with ID 'nonexistent' not found.");
         }
 
@@ -126,7 +126,7 @@ namespace BaseArchitecture.Tests
             var testObject2 = new TestRepositoryObject2 { ID = "test2" };
             _repository.AddObject(testObject2);
 
-            _repository.GetObject<TestRepositoryObject2>("test1");
+            _repository.Get<TestRepositoryObject2>("test1");
             LogAssert.Expect(LogType.Error, "[Repository] [Error] Object with ID 'test1' is not of type TestRepositoryObject2, it is TestRepositoryObject.");
         }
 

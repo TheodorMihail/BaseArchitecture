@@ -14,14 +14,19 @@ namespace BaseArchitecture.Core
     {
         event Action<string> OnSceneLoadStarted;
         event Action<string> OnSceneLoaded;
-        void LoadScene(string sceneLoad);
+        void LoadScene(string sceneLoad,  params object[] sceneParams);
         void ReloadCurrentScene();
+        object[] PendingSceneParams { get; }
     }
 
     public class ScenesManager : IScenesManager
     {
+        public object[] PendingSceneParams => _pendingSceneParams;
+        private object[] _pendingSceneParams;
+
         public event Action<string> OnSceneLoaded;
         public event Action<string> OnSceneLoadStarted;
+
 
         private CancellationTokenSource _cancellationTokenSource;
 
@@ -32,11 +37,10 @@ namespace BaseArchitecture.Core
 
         public void Dispose()
         {
-            _cancellationTokenSource?.Cancel();
-            _cancellationTokenSource?.Dispose();
+            _cancellationTokenSource?.CancelAndDispose();
         }
 
-        public void LoadScene(string sceneName)
+        public void LoadScene(string sceneName, params object[] sceneParams)
         {
             if (string.IsNullOrEmpty(sceneName))
             {
@@ -45,6 +49,7 @@ namespace BaseArchitecture.Core
             }
 
             Debug.Log($"Load Scene: {sceneName}");
+            _pendingSceneParams = sceneParams.Length > 0 ? sceneParams : null;
             OnSceneLoadStarted?.Invoke(sceneName);
 
             var token = _cancellationTokenSource.Token;
@@ -65,7 +70,7 @@ namespace BaseArchitecture.Core
         public void ReloadCurrentScene()
         {
             Scene scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
-            LoadScene(scene.name);
+            LoadScene(scene.name, _pendingSceneParams);
         }
     }
 }

@@ -13,7 +13,6 @@ namespace BaseArchitecture.Core
     /// The framework automatically passes parameters when available.
     /// </summary>
     public interface IModelWithParams<TParam> : IModel
-        where TParam : IScreenParam
     {
         void InitializeWithParameters(TParam parameters);
     }

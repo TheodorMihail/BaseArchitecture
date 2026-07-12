@@ -1,6 +1,6 @@
 {
   "name": "com.theodormihail.basearchitecture",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "displayName": "Base Architecture",
   "description": "Base architecture package for Unity projects",
   "unity": "6000.0",
@@ -10,7 +10,8 @@
   "dependencies": {
     "com.svermeulen.extenject": "9.1.0",
     "com.cysharp.unitask": "2.5.10",
-    "com.unity.addressables": "2.7.4"
+    "com.unity.addressables": "2.7.4",
+    "com.unity.nuget.newtonsoft-json": "3.2.1"
   },
   "samples": [
     {

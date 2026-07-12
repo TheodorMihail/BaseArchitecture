@@ -16,6 +16,12 @@ namespace BaseArchitecture.Core
         string UIContainerID { get; }
         event Action OnClosed;
         void Close();
+
+        /// <summary>
+        /// Initializes this component with typed parameters. Applied to the Model,
+        /// if the Model implements <see cref="IModelWithParams{TParam}"/> for the matching type.
+        /// </summary>
+        void Initialize<TParam>(TParam parameter);
     }
 
     /// <summary>
@@ -43,6 +49,19 @@ namespace BaseArchitecture.Core
         public async void Initialize()
         {
             await CreateMVC();
+
+            if (_controller == null)
+                return;
+
+            _controller.Initialize();
+        }
+
+        public async void Initialize<TParam>(TParam parameter)
+        {
+            await CreateMVC();
+
+            if (_model is IModelWithParams<TParam> modelWithParams)
+                modelWithParams.InitializeWithParameters(parameter);
 
             if (_controller == null)
                 return;

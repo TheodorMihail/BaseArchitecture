@@ -25,17 +25,16 @@ namespace BaseArchitecture.Core
         void UpdateDIContainer(DiContainer container);
 
         void ShowHUD<T>(UIDisplayModes showType = UIDisplayModes.Parallel) where T : IHUD;
+        void ShowHUD<T, TParam>(TParam param, UIDisplayModes showType = UIDisplayModes.Parallel) where T : IHUD;
 
         UniTask ShowScreen<T>(UIDisplayModes showType = UIDisplayModes.Queue) where T : IScreen;
         UniTask<TResult> ShowScreen<T, TResult>(UIDisplayModes showType = UIDisplayModes.Queue)
             where T : IScreenWithResult<TResult>
             where TResult : IScreenResult;
         UniTask ShowScreen<T, TParam>(TParam param, UIDisplayModes showType = UIDisplayModes.Queue)
-            where T : IScreenWithParams<TParam>
-            where TParam : IScreenParam;
+            where T : IScreen;
         UniTask<TResult> ShowScreen<T, TParam, TResult>(TParam param, UIDisplayModes showType = UIDisplayModes.Queue)
-            where T : IScreenWithParams<TParam>, IScreenWithResult<TResult>
-            where TParam : IScreenParam
+            where T : IScreenWithResult<TResult>
             where TResult : IScreenResult;
     }
 
@@ -79,6 +78,12 @@ namespace BaseArchitecture.Core
             hud.Initialize();
         }
 
+        public async void ShowHUD<T, TParam>(TParam param, UIDisplayModes showType = UIDisplayModes.Parallel) where T : IHUD
+        {
+            T hud = await CreateUIComponentInstance<T>(showType);
+            hud.Initialize(param);
+        }
+
         #region Screens
 
         public async UniTask ShowScreen<T>(UIDisplayModes showType = UIDisplayModes.Queue) where T : IScreen
@@ -101,24 +106,20 @@ namespace BaseArchitecture.Core
         }
 
         public async UniTask ShowScreen<T, TParam>(TParam param, UIDisplayModes showType = UIDisplayModes.Queue)
-            where T : IScreenWithParams<TParam>
-            where TParam : IScreenParam
+            where T : IScreen
         {
             var screen = await CreateUIComponentInstance<T>(showType);
-            screen.SetParameter(param);
-            screen.Initialize();
+            screen.Initialize(param);
 
             await screen.WaitForClosure();
         }
 
         public async UniTask<TResult> ShowScreen<T, TParam, TResult>(TParam param, UIDisplayModes showType = UIDisplayModes.Queue)
-            where T : IScreenWithParams<TParam>, IScreenWithResult<TResult>
-            where TParam : IScreenParam
-            where TResult : IScreenResult   
+            where T : IScreenWithResult<TResult>
+            where TResult : IScreenResult
         {
             var screen = await CreateUIComponentInstance<T>(showType);
-            screen.SetParameter(param);
-            screen.Initialize();
+            screen.Initialize(param);
 
             await screen.WaitForClosure();
             return screen.GetResult();
@@ -177,7 +178,11 @@ namespace BaseArchitecture.Core
                     break;
 
                 case UIDisplayModes.Queue:
-                    await UniTask.WaitUntil(() => existingComponents.Count == 0, cancellationToken: _cancellationTokenSource.Token);
+                    try
+                    {
+                        await UniTask.WaitUntil(() => existingComponents.Count == 0, cancellationToken: _cancellationTokenSource.Token);
+                    }
+                    catch {}
                     break;
             }
 

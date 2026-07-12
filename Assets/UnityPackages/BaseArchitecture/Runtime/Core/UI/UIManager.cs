@@ -178,7 +178,11 @@ namespace BaseArchitecture.Core
                     break;
 
                 case UIDisplayModes.Queue:
-                    await UniTask.WaitUntil(() => existingComponents.Count == 0, cancellationToken: _cancellationTokenSource.Token);
+                    try
+                    {
+                        await UniTask.WaitUntil(() => existingComponents.Count == 0, cancellationToken: _cancellationTokenSource.Token);
+                    }
+                    catch {}
                     break;
             }
 

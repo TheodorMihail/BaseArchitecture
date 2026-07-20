@@ -13,6 +13,7 @@ It includes a few placeholder scenes on the surface, but under the hood it bring
 - 📦 **Addressables** — for efficient asset management
 - ♻️ **Object Pooling** — for optimized object reuse and reduced GC pressure
 - 🗂️ **Repository Pattern** — for centralized configuration and data management
+- 💾 **Persistence** — for saving/loading game data, with a swappable storage implementation
 - 📬 **Message Bus** — for decoupled pub/sub communication between systems
 - 🛠️ **Extension Methods** — for cleaner code and reusable utilities
 - ⚡ **Assembly Definitions** — for faster compile times
@@ -59,6 +60,7 @@ Each scene is organized with:
 - **AddressablesManager** — Loads assets asynchronously via Addressables
 - **ObjectPooling** — Reuses objects for better performance via `IPoolableObject` interface
 - **Repository** — Centralizes configuration objects for easy access via `IRepositoryObject` interface
+- **PersistenceManager** — Saves/loads typed data via `IPersistenceManager`; ships with a default local (JSON file) implementation and can be swapped for a networked/backend implementation without changing calling code
 - **MessageBus** — Publish/subscribe pattern for decoupled system communication via `IMessageObject` interface
 
 ### 🧰 Extension Methods
@@ -79,7 +81,7 @@ Example content importable via **Package Manager → Base Architecture → Sampl
 
 Comprehensive test coverage using Unity Test Framework, NUnit, and Zenject Test Framework:
 
-- **EditMode** — MessageBus, Repository
+- **EditMode** — MessageBus, Repository, PersistenceManager
 - **PlayMode** — CustomFactory, ObjectPooling
 
 Tests are editor-only and excluded from player builds.
@@ -114,3 +116,9 @@ https://github.com/TheodorMihail/BaseArchitecture.git?path=/Assets/UnityPackages
 Dependencies (Extenject, UniTask, Addressables) resolve automatically once the registry is set. Append `#v1.0.0` to the URL to pin a version.
 
 **3. Import samples (optional)** via **Package Manager → Base Architecture → Samples → Error Dialog Screen → Import**.
+
+---
+
+<h2>📄 License</h2>
+
+Licensed under [PolyForm Noncommercial 1.0.0](LICENSE) — free for personal use, learning, and other noncommercial purposes. Commercial use requires a separate agreement with the author.

@@ -71,7 +71,7 @@ namespace BaseArchitecture.Tests
             _repository.AddObject(testObject);
 
             _repository.Get<TestRepositoryObject>("nonexistent");
-            LogAssert.Expect(LogType.Error, "[Repository] [Error] Object with ID 'nonexistent' not found.");
+            LogAssert.Expect(LogType.Error, "[Repository] [Error] Object with ID 'nonexistent' not found in bucket TestRepositoryObject.");
         }
 
         [Test]
@@ -94,7 +94,7 @@ namespace BaseArchitecture.Tests
         public void GetObject_WithEmptyRepository_ReturnsNullAndLogsError()
         {
             Assert.IsNull(_repository.Get<TestRepositoryObject>("any"));
-            LogAssert.Expect(LogType.Error, "[Repository] [Error] Object with ID 'any' not found.");
+            LogAssert.Expect(LogType.Error, "[Repository] [Error] Object with ID 'any' not found in bucket TestRepositoryObject.");
         }
 
         [Test]
@@ -114,7 +114,7 @@ namespace BaseArchitecture.Tests
         public void GetObjectGeneric_WithInvalidID_ReturnsDefaultAndLogsError()
         {
             _repository.Get<TestRepositoryObject>("nonexistent");
-            LogAssert.Expect(LogType.Error, "[Repository] [Error] Object with ID 'nonexistent' not found.");
+            LogAssert.Expect(LogType.Error, "[Repository] [Error] Object with ID 'nonexistent' not found in bucket TestRepositoryObject.");
         }
 
 
@@ -127,7 +127,7 @@ namespace BaseArchitecture.Tests
             _repository.AddObject(testObject2);
 
             _repository.Get<TestRepositoryObject2>("test1");
-            LogAssert.Expect(LogType.Error, "[Repository] [Error] Object with ID 'test1' is not of type TestRepositoryObject2, it is TestRepositoryObject.");
+            LogAssert.Expect(LogType.Error, "[Repository] [Error] Object with ID 'test1' not found in bucket TestRepositoryObject2.");
         }
 
         [Test]

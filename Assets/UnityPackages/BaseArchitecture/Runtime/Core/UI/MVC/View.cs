@@ -22,6 +22,17 @@ namespace BaseArchitecture.Core
         public virtual void Initialize() { }
     }
 
+    /// <summary>Opt-in View base for screens that query their Model on demand instead of receiving pushed data. Controller{S,M,V} sets the Model before Initialize() runs.</summary>
+    public abstract class View<TModel> : View where TModel : IModel
+    {
+        protected TModel _model;
+
+        public void SetModel(TModel model)
+        {
+            _model = model;
+        }
+    }
+
     /// <summary>
     /// Attribute that specifies the Addressables path for a View prefab.
     /// Applied to View classes to enable automatic loading from Addressables.

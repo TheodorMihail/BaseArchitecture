@@ -100,7 +100,7 @@ namespace BaseArchitecture.Core
 
                 if (prefab == null)
                 {
-                    await OnLoadFailed("Prefab could not be loaded!");
+                    OnLoadFailed("Prefab could not be loaded!");
                     return;
                 }
 
@@ -111,14 +111,14 @@ namespace BaseArchitecture.Core
             }
             catch (Exception ex)
             {
-                await OnLoadFailed(ex.Message);
+                OnLoadFailed(ex.Message);
             }
         }
 
         /// <summary>
         /// Called when MVC loading fails. Override to provide custom failure handling.
         /// </summary>
-        protected virtual async UniTask OnLoadFailed(string error)
+        protected virtual void OnLoadFailed(string error)
         {
            this.LogError($"Failed to load {UICategoryID}: {GetType().Name} \n {error}");
             Close();

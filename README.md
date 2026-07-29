@@ -15,6 +15,7 @@ It includes a few placeholder scenes on the surface, but under the hood it bring
 - 🗂️ **Repository Pattern** — for centralized configuration and data management
 - 💾 **Persistence** — for saving/loading game data, with a swappable storage implementation
 - 📬 **Message Bus** — for decoupled pub/sub communication between systems
+- 🔊 **Audio System** — channel-based music/SFX manager with crossfading and persisted volume/mute settings
 - 🛠️ **Extension Methods** — for cleaner code and reusable utilities
 - ⚡ **Assembly Definitions** — for faster compile times
 - 🧪 **Comprehensive test coverage** — with EditMode and PlayMode tests
@@ -41,9 +42,10 @@ The framework provides **Screens** and **HUDs** as predefined MVC containers:
 Both control their MVC lifecycle automatically:
 
 - **Models** — Data containers with optional auto-initialization from parameters
-- **Views** — Unity MonoBehaviours instantiated from prefabs using attributes
+- **Views** — Unity MonoBehaviours instantiated from prefabs using attributes, with an `[AddressablePath]` attribute so the View's prefab is resolved automatically via `IAddressablesManager`
 - **Controllers** — Orchestrate interactions between Models and Views
 - **Parameters & Results** — Type-safe screen communication
+- **Display modes** — `ShowScreen`/`ShowHUD` accept a `UIDisplayModes` policy (`Queue`, `Parallel`, `Replace`) controlling how a new UI component behaves relative to already-open ones of its category
 
 ### 🎬 Scene Management
 
@@ -62,12 +64,14 @@ Each scene is organized with:
 - **Repository** — Centralizes configuration objects for easy access via `IRepositoryObject` interface
 - **PersistenceManager** — Saves/loads typed data via `IPersistenceManager`; ships with a default local (JSON file) implementation and can be swapped for a networked/backend implementation without changing calling code
 - **MessageBus** — Publish/subscribe pattern for decoupled system communication via `IMessageObject` interface
+- **SoundsManager** — Channel-based audio via `ISoundsManager`: one-shot SFX per channel, looping music/ambience with automatic DOTween-driven crossfading between clips on the same channel, and per-channel volume/mute control persisted automatically through `PersistenceManager`
 
 ### 🧰 Extension Methods
 
 - **LoggingExtensions** — Type-aware logging with `this.Log()`, `this.LogWarning()`, `this.LogError()`
 - **UIExtensions** — Async UI animations with `FadeToAsync()` and `CountdownAsync()` for smooth transitions
 - **CancellationTokenSourceExtensions** — Safe cancellation with `CancelAndDispose()` helper method
+- **ParamsExtensions** — `TryGetParam<T>()` for safely pulling a typed value out of a loosely-typed `object[]` params array with a default fallback
 
 ### 🪄 Editor Tools
 
@@ -113,7 +117,7 @@ BaseArchitecture is installed as a **Unity package (UPM)** from this Git repo. T
 https://github.com/TheodorMihail/BaseArchitecture.git?path=/Assets/UnityPackages/BaseArchitecture
 ```
 
-Dependencies (Extenject, UniTask, Addressables) resolve automatically once the registry is set. Append `#v1.0.0` to the URL to pin a version.
+Dependencies (Extenject, UniTask, Addressables) resolve automatically once the registry is set. Append `#v1.0.0` to the URL to pin a version. **DOTween** must be imported manually from the [Asset Store](http://dotween.demigiant.com/) — it drives the `SoundsManager` crossfade tweens.
 
 **3. Import samples (optional)** via **Package Manager → Base Architecture → Samples → Error Dialog Screen → Import**.
 

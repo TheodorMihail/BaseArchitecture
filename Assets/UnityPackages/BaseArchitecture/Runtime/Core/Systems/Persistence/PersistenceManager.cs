@@ -5,11 +5,18 @@ using UnityEngine;
 
 namespace BaseArchitecture.Core
 {
+    /// <summary>
+    /// Marker interface for types persisted via IPersistenceManager.
+    /// </summary>
+    public interface ISaveData
+    {
+    }
+
     public interface IPersistenceManager
     {
         bool Exists(string key);
-        T Load<T>(string key) where T : class, new();
-        void Save<T>(string key, T data) where T : class;
+        T Load<T>(string key) where T : class, ISaveData, new();
+        void Save<T>(string key, T data) where T : class, ISaveData;
         void Delete(string key);
     }
 
@@ -32,12 +39,12 @@ namespace BaseArchitecture.Core
 
         public bool Exists(string key) => _entries.ContainsKey(key);
 
-        public T Load<T>(string key) where T : class, new()
+        public T Load<T>(string key) where T : class, ISaveData, new()
         {
             return _entries.TryGetValue(key, out string json) ? JsonConvert.DeserializeObject<T>(json) : new T();
         }
 
-        public void Save<T>(string key, T data) where T : class
+        public void Save<T>(string key, T data) where T : class, ISaveData
         {
             _entries[key] = JsonConvert.SerializeObject(data);
             Flush();

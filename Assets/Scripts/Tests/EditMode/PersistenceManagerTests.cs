@@ -5,7 +5,7 @@ using BaseArchitecture.Core;
 
 namespace BaseArchitecture.Tests
 {
-    public class TestSaveData
+    public class TestSaveData : ISaveData
     {
         public int Score;
         public string Name;

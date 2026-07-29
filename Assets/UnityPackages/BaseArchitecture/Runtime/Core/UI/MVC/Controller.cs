@@ -34,6 +34,11 @@ namespace BaseArchitecture.Core
 
         public virtual void Initialize()
         {
+            if (_view is View<M> viewWithModel)
+            {
+                viewWithModel.SetModel(_model);
+            }
+
             _view.Initialize();
         }
 

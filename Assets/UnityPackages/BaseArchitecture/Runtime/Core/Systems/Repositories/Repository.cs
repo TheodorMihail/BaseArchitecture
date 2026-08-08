@@ -3,12 +3,22 @@ using System.Collections.Generic;
 
 namespace BaseArchitecture.Core
 {
+    /// <summary>
+    /// In-memory store for objects addressed by ObjectID. Objects are grouped into buckets keyed by
+    /// the generic argument they were added with, not by their runtime type.
+    /// </summary>
     public interface IRepository
     {
         void AddObjects<T>(IEnumerable<T> objs) where T : IRepositoryObject;
+
+        /// <summary>Duplicate ObjectIDs are ignored with a warning, the first object added wins.</summary>
         void AddObject<T>(T obj) where T : IRepositoryObject;
+
         void RemoveObject<T>(T obj) where T : IRepositoryObject;
+
+        /// <summary>Logs an error when the id is not present in the bucket.</summary>
         bool TryGet<T>(string id, out T obj) where T : IRepositoryObject;
+
         IReadOnlyList<T> GetAll<T>() where T : IRepositoryObject;
     }
 

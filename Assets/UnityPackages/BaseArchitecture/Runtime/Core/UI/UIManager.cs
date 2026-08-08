@@ -127,6 +127,8 @@ namespace BaseArchitecture.Core
 
         #endregion
 
+        /// <summary>Resolves the container and category for the component type, applies the display
+        /// mode against the components already active in that category, then creates the instance.</summary>
         private async UniTask<T> CreateUIComponentInstance<T>(UIDisplayModes showType) where T : IUIComponent
         {
             string containerID;

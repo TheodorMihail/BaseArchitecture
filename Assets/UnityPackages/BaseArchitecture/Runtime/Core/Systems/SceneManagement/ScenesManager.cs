@@ -16,6 +16,8 @@ namespace BaseArchitecture.Core
         event Action<string> OnSceneLoaded;
         void LoadScene(string sceneLoad,  params object[] sceneParams);
         void ReloadCurrentScene();
+
+        /// <summary>Parameters passed to the most recent LoadScene call, read by the loaded scene.</summary>
         object[] PendingSceneParams { get; }
     }
 

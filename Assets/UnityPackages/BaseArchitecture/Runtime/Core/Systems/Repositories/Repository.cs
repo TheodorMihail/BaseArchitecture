@@ -3,12 +3,22 @@ using System.Collections.Generic;
 
 namespace BaseArchitecture.Core
 {
+    /// <summary>
+    /// In-memory store for objects addressed by ObjectID. Objects are grouped into buckets keyed by
+    /// the generic argument they were added with, not by their runtime type.
+    /// </summary>
     public interface IRepository
     {
         void AddObjects<T>(IEnumerable<T> objs) where T : IRepositoryObject;
+
+        /// <summary>Duplicate ObjectIDs are ignored with a warning, the first object added wins.</summary>
         void AddObject<T>(T obj) where T : IRepositoryObject;
+
         void RemoveObject<T>(T obj) where T : IRepositoryObject;
-        T Get<T>(string id) where T : IRepositoryObject;
+
+        /// <summary>Logs an error when the id is not present in the bucket.</summary>
+        bool TryGet<T>(string id, out T obj) where T : IRepositoryObject;
+
         IReadOnlyList<T> GetAll<T>() where T : IRepositoryObject;
     }
 
@@ -46,16 +56,25 @@ namespace BaseArchitecture.Core
                 bucket.Remove(obj.ObjectID);
         }
 
-        public T Get<T>(string id) where T : IRepositoryObject
+        public bool TryGet<T>(string id, out T obj) where T : IRepositoryObject
         {
             var type = typeof(T);
-            if (!_buckets.TryGetValue(type, out var bucket) || !bucket.TryGetValue(id, out var obj))
+            obj = default;
+
+            if (id == null)
             {
-                this.LogError($"Object with ID '{id}' not found in bucket {type.Name}.");
-                return default;
+                this.LogError($"Cannot look up an object in bucket {type.Name}: id was null.");
+                return false;
             }
 
-            return (T)obj;
+            if (!_buckets.TryGetValue(type, out var bucket) || !bucket.TryGetValue(id, out var found))
+            {
+                this.LogError($"Object with ID '{id}' not found in bucket {type.Name}.");
+                return false;
+            }
+
+            obj = (T)found;
+            return true;
         }
 
         public IReadOnlyList<T> GetAll<T>() where T : IRepositoryObject

@@ -124,7 +124,7 @@ BaseArchitecture is installed as a **Unity package (UPM)** from this Git repo. T
 https://github.com/TheodorMihail/BaseArchitecture.git?path=/Assets/UnityPackages/BaseArchitecture
 ```
 
-Dependencies (Extenject, UniTask, Addressables) resolve automatically once the registry is set. Append a [release tag](https://github.com/TheodorMihail/BaseArchitecture/tags) such as `#v1.3.0` to the URL to pin a version. **DOTween** must be imported manually from the [Asset Store](http://dotween.demigiant.com/), since it drives the `SoundsManager` crossfade tweens.
+Dependencies (Extenject, UniTask, Addressables) resolve automatically once the registry is set. Append a [release tag](https://github.com/TheodorMihail/BaseArchitecture/tags) such as `#v1.4.0` to the URL to pin a version. **DOTween** must be imported manually from the [Asset Store](http://dotween.demigiant.com/), since it drives the `SoundsManager` crossfade tweens.
 
 **3. Import samples (optional)** via **Package Manager → Base Architecture → Samples → Error Dialog Screen → Import**.
 

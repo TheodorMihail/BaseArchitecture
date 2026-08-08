@@ -39,6 +39,8 @@ namespace BaseArchitecture.Core
 
     public class SoundsManager : ISoundsManager
     {
+        /// <summary>Two sources per channel, so an incoming loop can fade in while the previous one
+        /// fades out.</summary>
         private class LoopChannel
         {
             public AudioSource SourceA;
@@ -70,7 +72,7 @@ namespace BaseArchitecture.Core
                 return;
             }
 
-            GetOrCreateOneShotSource(channel).PlayOneShot(clip, Effective(channel, volume));
+            GetOrCreateOneShotSource(channel).PlayOneShot(clip, GetOutputVolume(channel, volume));
         }
 
         public void PlayLoop(AudioClip clip, string channel, float volume = 1f, float crossfadeDuration = 0.5f)
@@ -100,7 +102,7 @@ namespace BaseArchitecture.Core
             incoming.volume = 0f;
             incoming.Play();
 
-            float targetVolume = Effective(channel, volume);
+            float targetVolume = GetOutputVolume(channel, volume);
             var sequence = DOTween.Sequence();
             sequence.Join(FadeVolume(incoming, targetVolume, crossfadeDuration));
 
@@ -169,7 +171,7 @@ namespace BaseArchitecture.Core
 
             if (_loopChannels.TryGetValue(channel, out var loopChannel))
             {
-                loopChannel.Active.volume = Effective(channel, volume);
+                loopChannel.Active.volume = GetOutputVolume(channel, volume);
             }
         }
 
@@ -180,11 +182,12 @@ namespace BaseArchitecture.Core
 
             foreach (var pair in _loopChannels)
             {
-                pair.Value.Active.volume = Effective(pair.Key, GetChannelVolume(pair.Key));
+                pair.Value.Active.volume = GetOutputVolume(pair.Key, GetChannelVolume(pair.Key));
             }
         }
 
-        private float Effective(string channel, float baseVolume)
+        /// <summary>Combines the requested volume with the channel volume and the mute state.</summary>
+        private float GetOutputVolume(string channel, float baseVolume)
         {
             if (IsMuted)
             {

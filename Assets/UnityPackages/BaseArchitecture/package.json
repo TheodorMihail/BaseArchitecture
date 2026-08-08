@@ -1,6 +1,6 @@
 {
   "name": "com.theodormihail.basearchitecture",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "displayName": "Base Architecture",
   "description": "Base architecture package for Unity projects",
   "unity": "6000.0",

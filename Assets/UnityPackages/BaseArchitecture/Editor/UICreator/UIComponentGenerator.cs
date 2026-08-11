@@ -3,7 +3,7 @@ using UnityEditor;
 
 namespace BaseArchitecture.Editor
 {
-    public enum UIComponentType
+    public enum UIComponentTypes
     {
         Screen,
         HUD
@@ -15,13 +15,13 @@ namespace BaseArchitecture.Editor
     /// </summary>
     public static class UIComponentGenerator
     {
-        public static void Generate(string componentName, UIComponentType componentType, string folderPath, string namespaceName)
+        public static void Generate(string componentName, UIComponentTypes componentType, string folderPath, string namespaceName)
         {
             var componentFolder = Path.Combine(folderPath, componentName);
             Directory.CreateDirectory(componentFolder);
 
-            var typeSuffix = componentType == UIComponentType.Screen ? "Screen" : "HUD";
-            var addressableFolder = componentType == UIComponentType.Screen ? "Screens" : "HUD";
+            var typeSuffix = componentType == UIComponentTypes.Screen ? "Screen" : "HUD";
+            var addressableFolder = componentType == UIComponentTypes.Screen ? "Screens" : "HUD";
             var addressablePath = $"{addressableFolder}/{componentName}{typeSuffix}View";
 
             WriteFile(componentFolder, $"{componentName}Model.cs", BuildModel(componentName, namespaceName));
@@ -76,9 +76,9 @@ namespace {ns}
 }}
 ";
 
-        private static string BuildComponent(string name, string ns, UIComponentType componentType, string typeSuffix)
+        private static string BuildComponent(string name, string ns, UIComponentTypes componentType, string typeSuffix)
         {
-            var baseClass = componentType == UIComponentType.Screen ? "Screen" : "HUD";
+            var baseClass = componentType == UIComponentTypes.Screen ? "Screen" : "HUD";
 
             return
 $@"using BaseArchitecture.Core;

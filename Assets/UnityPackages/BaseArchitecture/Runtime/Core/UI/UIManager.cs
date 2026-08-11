@@ -7,7 +7,7 @@ using Zenject;
 
 namespace BaseArchitecture.Core
 {
-    public enum UIDisplayModes
+    public enum UIDisplayTypes
     {
         Queue,     // Wait for existing active UIComponent to close
         Parallel, // Allow multiple active UIComponents in category
@@ -24,16 +24,16 @@ namespace BaseArchitecture.Core
     {
         void UpdateDIContainer(DiContainer container);
 
-        void ShowHUD<T>(UIDisplayModes showType = UIDisplayModes.Parallel) where T : IHUD;
-        void ShowHUD<T, TParam>(TParam param, UIDisplayModes showType = UIDisplayModes.Parallel) where T : IHUD;
+        void ShowHUD<T>(UIDisplayTypes showType = UIDisplayTypes.Parallel) where T : IHUD;
+        void ShowHUD<T, TParam>(TParam param, UIDisplayTypes showType = UIDisplayTypes.Parallel) where T : IHUD;
 
-        UniTask ShowScreen<T>(UIDisplayModes showType = UIDisplayModes.Queue) where T : IScreen;
-        UniTask<TResult> ShowScreen<T, TResult>(UIDisplayModes showType = UIDisplayModes.Queue)
+        UniTask ShowScreen<T>(UIDisplayTypes showType = UIDisplayTypes.Queue) where T : IScreen;
+        UniTask<TResult> ShowScreen<T, TResult>(UIDisplayTypes showType = UIDisplayTypes.Queue)
             where T : IScreenWithResult<TResult>
             where TResult : IScreenResult;
-        UniTask ShowScreen<T, TParam>(TParam param, UIDisplayModes showType = UIDisplayModes.Queue)
+        UniTask ShowScreen<T, TParam>(TParam param, UIDisplayTypes showType = UIDisplayTypes.Queue)
             where T : IScreen;
-        UniTask<TResult> ShowScreen<T, TParam, TResult>(TParam param, UIDisplayModes showType = UIDisplayModes.Queue)
+        UniTask<TResult> ShowScreen<T, TParam, TResult>(TParam param, UIDisplayTypes showType = UIDisplayTypes.Queue)
             where T : IScreenWithResult<TResult>
             where TResult : IScreenResult;
     }
@@ -72,13 +72,13 @@ namespace BaseArchitecture.Core
             _diContainer = container;
         }
 
-        public async void ShowHUD<T>(UIDisplayModes showType = UIDisplayModes.Parallel) where T : IHUD
+        public async void ShowHUD<T>(UIDisplayTypes showType = UIDisplayTypes.Parallel) where T : IHUD
         {
             T hud = await CreateUIComponentInstance<T>(showType);
             hud.Initialize();
         }
 
-        public async void ShowHUD<T, TParam>(TParam param, UIDisplayModes showType = UIDisplayModes.Parallel) where T : IHUD
+        public async void ShowHUD<T, TParam>(TParam param, UIDisplayTypes showType = UIDisplayTypes.Parallel) where T : IHUD
         {
             T hud = await CreateUIComponentInstance<T>(showType);
             hud.Initialize(param);
@@ -86,7 +86,7 @@ namespace BaseArchitecture.Core
 
         #region Screens
 
-        public async UniTask ShowScreen<T>(UIDisplayModes showType = UIDisplayModes.Queue) where T : IScreen
+        public async UniTask ShowScreen<T>(UIDisplayTypes showType = UIDisplayTypes.Queue) where T : IScreen
         {
             var screen = await CreateUIComponentInstance<T>(showType);
             screen.Initialize();
@@ -94,7 +94,7 @@ namespace BaseArchitecture.Core
             await screen.WaitForClosure();
         }
 
-        public async UniTask<TResult> ShowScreen<T, TResult>(UIDisplayModes showType = UIDisplayModes.Queue)
+        public async UniTask<TResult> ShowScreen<T, TResult>(UIDisplayTypes showType = UIDisplayTypes.Queue)
             where T : IScreenWithResult<TResult>
             where TResult : IScreenResult
         {
@@ -105,7 +105,7 @@ namespace BaseArchitecture.Core
             return screen.GetResult();
         }
 
-        public async UniTask ShowScreen<T, TParam>(TParam param, UIDisplayModes showType = UIDisplayModes.Queue)
+        public async UniTask ShowScreen<T, TParam>(TParam param, UIDisplayTypes showType = UIDisplayTypes.Queue)
             where T : IScreen
         {
             var screen = await CreateUIComponentInstance<T>(showType);
@@ -114,7 +114,7 @@ namespace BaseArchitecture.Core
             await screen.WaitForClosure();
         }
 
-        public async UniTask<TResult> ShowScreen<T, TParam, TResult>(TParam param, UIDisplayModes showType = UIDisplayModes.Queue)
+        public async UniTask<TResult> ShowScreen<T, TParam, TResult>(TParam param, UIDisplayTypes showType = UIDisplayTypes.Queue)
             where T : IScreenWithResult<TResult>
             where TResult : IScreenResult
         {
@@ -129,7 +129,7 @@ namespace BaseArchitecture.Core
 
         /// <summary>Resolves the container and category for the component type, applies the display
         /// mode against the components already active in that category, then creates the instance.</summary>
-        private async UniTask<T> CreateUIComponentInstance<T>(UIDisplayModes showType) where T : IUIComponent
+        private async UniTask<T> CreateUIComponentInstance<T>(UIDisplayTypes showType) where T : IUIComponent
         {
             string containerID;
             string categoryKey;
@@ -160,7 +160,7 @@ namespace BaseArchitecture.Core
 
             switch (showType)
             {
-                case UIDisplayModes.Replace:
+                case UIDisplayTypes.Replace:
                     foreach (var existing in existingComponents)
                     {
                         existing.Close();
@@ -168,7 +168,7 @@ namespace BaseArchitecture.Core
                     existingComponents.Clear();
                     break;
 
-                case UIDisplayModes.Parallel:
+                case UIDisplayTypes.Parallel:
                     foreach (var component in existingComponents)
                     {
                         if (component is T existing)
@@ -179,7 +179,7 @@ namespace BaseArchitecture.Core
                     }
                     break;
 
-                case UIDisplayModes.Queue:
+                case UIDisplayTypes.Queue:
                     try
                     {
                         await UniTask.WaitUntil(() => existingComponents.Count == 0, cancellationToken: _cancellationTokenSource.Token);

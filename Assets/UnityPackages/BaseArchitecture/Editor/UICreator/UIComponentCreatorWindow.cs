@@ -12,7 +12,7 @@ namespace BaseArchitecture.Editor
     /// </summary>
     public class UIComponentCreatorWindow : EditorWindow
     {
-        private UIComponentType _componentType = UIComponentType.Screen;
+        private UIComponentTypes _componentType = UIComponentTypes.Screen;
         private string _componentName = "";
         private string _folderPath = "Assets";
         private string _namespaceName = "Game";
@@ -30,7 +30,7 @@ namespace BaseArchitecture.Editor
             EditorGUILayout.LabelField("UI Component Creator", EditorStyles.boldLabel);
             EditorGUILayout.Space();
 
-            _componentType = (UIComponentType)EditorGUILayout.EnumPopup("Type", _componentType);
+            _componentType = (UIComponentTypes)EditorGUILayout.EnumPopup("Type", _componentType);
             _componentName = EditorGUILayout.TextField("Name", _componentName);
 
             EditorGUILayout.BeginHorizontal();
@@ -126,7 +126,7 @@ namespace BaseArchitecture.Editor
                 !Regex.IsMatch(_namespaceName, @"^[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z_][A-Za-z0-9_]*)*$"))
                 return "Namespace must be a valid dotted identifier.";
 
-            var typeSuffix = _componentType == UIComponentType.Screen ? "Screen" : "HUD";
+            var typeSuffix = _componentType == UIComponentTypes.Screen ? "Screen" : "HUD";
             var targetFile = Path.Combine(_folderPath, _componentName, $"{_componentName}{typeSuffix}.cs");
             if (File.Exists(targetFile))
                 return $"{_componentName}{typeSuffix} already exists at that location.";
@@ -138,7 +138,7 @@ namespace BaseArchitecture.Editor
         {
             UIComponentGenerator.Generate(_componentName, _componentType, _folderPath, _namespaceName);
 
-            var typeSuffix = _componentType == UIComponentType.Screen ? "Screen" : "HUD";
+            var typeSuffix = _componentType == UIComponentTypes.Screen ? "Screen" : "HUD";
             EditorUtility.DisplayDialog(
                 "UI Component Created",
                 $"{_componentName}{typeSuffix} created at {_folderPath}/{_componentName}",

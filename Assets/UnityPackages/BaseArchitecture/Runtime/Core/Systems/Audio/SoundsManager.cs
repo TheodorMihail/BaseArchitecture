@@ -41,7 +41,7 @@ namespace BaseArchitecture.Core
     {
         /// <summary>Two sources per channel, so an incoming loop can fade in while the previous one
         /// fades out.</summary>
-        private class LoopChannel
+        private class LoopChannelDTO
         {
             public AudioSource SourceA;
             public AudioSource SourceB;
@@ -54,7 +54,7 @@ namespace BaseArchitecture.Core
         private SoundsSaveData _data;
         private GameObject _root;
         private readonly Dictionary<string, AudioSource> _oneShotSources = new();
-        private readonly Dictionary<string, LoopChannel> _loopChannels = new();
+        private readonly Dictionary<string, LoopChannelDTO> _loopChannels = new();
 
         public bool IsMuted => _data.Muted;
 
@@ -209,7 +209,7 @@ namespace BaseArchitecture.Core
             return source;
         }
 
-        private LoopChannel GetOrCreateLoopChannel(string channel)
+        private LoopChannelDTO GetOrCreateLoopChannel(string channel)
         {
             if (_loopChannels.TryGetValue(channel, out var loopChannel))
             {
@@ -219,7 +219,7 @@ namespace BaseArchitecture.Core
             var sourceA = CreateSource($"{channel}_LoopA");
             var sourceB = CreateSource($"{channel}_LoopB");
 
-            loopChannel = new LoopChannel { SourceA = sourceA, SourceB = sourceB, Active = sourceA };
+            loopChannel = new LoopChannelDTO { SourceA = sourceA, SourceB = sourceB, Active = sourceA };
             _loopChannels[channel] = loopChannel;
             return loopChannel;
         }

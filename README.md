@@ -16,6 +16,7 @@ It includes a few placeholder scenes on the surface, but under the hood it bring
 - 💾 **Persistence**: for saving/loading game data, with a swappable storage implementation
 - 📬 **Message Bus**: for decoupled pub/sub communication between systems
 - 🔊 **Audio System**: channel-based music/SFX manager with crossfading and persisted volume/mute settings
+- 🐞 **Debug Commands**: editor-only hotkey cheats declared by the system that owns the state, compiled out of release builds
 - 🛠️ **Extension Methods**: for cleaner code and reusable utilities
 - ⚡ **Assembly Definitions**: for faster compile times
 - 🧪 **Comprehensive test coverage**: with EditMode and PlayMode tests
@@ -52,7 +53,7 @@ Both control their MVC lifecycle automatically:
 - **Views**: Unity MonoBehaviours instantiated from prefabs using attributes, with an `[AddressablePath]` attribute so the View's prefab is resolved automatically via `IAddressablesManager`
 - **Controllers**: Orchestrate interactions between Models and Views
 - **Parameters & Results**: Type-safe screen communication
-- **Display modes**: `ShowScreen`/`ShowHUD` accept a `UIDisplayModes` policy (`Queue`, `Parallel`, `Replace`) controlling how a new UI component behaves relative to already-open ones of its category
+- **Display modes**: `ShowScreen`/`ShowHUD` accept a `UIDisplayTypes` policy (`Queue`, `Parallel`, `Replace`) controlling how a new UI component behaves relative to already-open ones of its category
 
 ### 🎬 Scene Management
 
@@ -72,6 +73,7 @@ Each scene is organized with:
 - **PersistenceManager**: Saves/loads typed data via `IPersistenceManager`; ships with a default local (JSON file) implementation and can be swapped for a networked/backend implementation without changing calling code
 - **MessageBus**: Publish/subscribe pattern for decoupled system communication via `IMessageObject` interface
 - **SoundsManager**: Channel-based audio via `ISoundsManager`: one-shot SFX per channel, looping music/ambience with automatic DOTween-driven crossfading between clips on the same channel, and per-channel volume/mute control persisted automatically through `PersistenceManager`
+- **DebugManager**: Editor-only cheat dispatch. Any system implements `IDebugCommandProvider` to declare its own `DebugCommandDTO`s (key, label, action), so the action stays on the class that owns the state instead of widening a production interface. `DebugManager` collects every bound provider, rejects duplicate key bindings with a logged error, logs the resulting keymap on startup, and is the only class polling the keyboard for cheats. Bind it per scene so each instance also picks up that scene's providers. The whole subsystem sits behind `#if UNITY_EDITOR || DEVELOPMENT_BUILD`
 
 ### 🧰 Extension Methods
 
@@ -124,9 +126,11 @@ BaseArchitecture is installed as a **Unity package (UPM)** from this Git repo. T
 https://github.com/TheodorMihail/BaseArchitecture.git?path=/Assets/UnityPackages/BaseArchitecture
 ```
 
-Dependencies (Extenject, UniTask, Addressables) resolve automatically once the registry is set. Append a [release tag](https://github.com/TheodorMihail/BaseArchitecture/tags) such as `#v1.4.0` to the URL to pin a version. **DOTween** must be imported manually from the [Asset Store](http://dotween.demigiant.com/), since it drives the `SoundsManager` crossfade tweens.
+Dependencies (Extenject, UniTask, Addressables, Newtonsoft Json, Input System) resolve automatically once the registry is set. Append a [release tag](https://github.com/TheodorMihail/BaseArchitecture/tags) such as `#v1.5.0` to the URL to pin a version. **DOTween** must be imported manually from the [Asset Store](http://dotween.demigiant.com/), since it drives the `SoundsManager` crossfade tweens.
 
-**3. Import samples (optional)** via **Package Manager → Base Architecture → Samples → Error Dialog Screen → Import**.
+**3. Enable the Input System**: set **Project Settings → Player → Active Input Handling** to **Input System Package** or **Both**. `DebugManager` polls `Keyboard.current`, which returns null while the project is on the legacy Input Manager only.
+
+**4. Import samples (optional)** via **Package Manager → Base Architecture → Samples → Error Dialog Screen → Import**.
 
 ---
 

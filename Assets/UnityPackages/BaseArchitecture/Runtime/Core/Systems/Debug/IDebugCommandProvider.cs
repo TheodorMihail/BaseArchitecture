@@ -11,19 +11,19 @@ namespace BaseArchitecture.Core
     /// </summary>
     public interface IDebugCommandProvider
     {
-        IReadOnlyList<DebugCommand> GetDebugCommands();
+        IReadOnlyList<DebugCommandDTO> GetDebugCommands();
     }
 
     /// <summary>
     /// A single debug command: the key that triggers it, a label for logging, and the action to run.
     /// </summary>
-    public readonly struct DebugCommand
+    public readonly struct DebugCommandDTO
     {
         public readonly Key Key;
         public readonly string Label;
         public readonly Action Action;
 
-        public DebugCommand(Key key, string label, Action action)
+        public DebugCommandDTO(Key key, string label, Action action)
         {
             Key = key;
             Label = label;

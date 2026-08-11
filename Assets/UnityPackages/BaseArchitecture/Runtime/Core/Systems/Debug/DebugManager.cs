@@ -16,13 +16,13 @@ namespace BaseArchitecture.Core
     {
         [Inject] private readonly List<IDebugCommandProvider> _providers;
 
-        private readonly List<DebugCommand> _commands = new List<DebugCommand>();
+        private readonly List<DebugCommandDTO> _commands = new List<DebugCommandDTO>();
 
         public void Initialize()
         {
             foreach (IDebugCommandProvider provider in _providers)
             {
-                foreach (DebugCommand command in provider.GetDebugCommands())
+                foreach (DebugCommandDTO command in provider.GetDebugCommands())
                 {
                     if (_commands.Exists(existing => existing.Key == command.Key))
                     {
@@ -42,11 +42,11 @@ namespace BaseArchitecture.Core
         /// </summary>
         private void LogCommands()
         {
-            var sorted = new List<DebugCommand>(_commands);
+            var sorted = new List<DebugCommandDTO>(_commands);
             sorted.Sort((first, second) => first.Key.CompareTo(second.Key));
 
             var builder = new StringBuilder($"Debug commands ({sorted.Count}):");
-            foreach (DebugCommand command in sorted)
+            foreach (DebugCommandDTO command in sorted)
             {
                 builder.AppendLine();
                 builder.Append($"  {command.Key} - {command.Label}");
@@ -62,7 +62,7 @@ namespace BaseArchitecture.Core
                 return;
             }
 
-            foreach (DebugCommand command in _commands)
+            foreach (DebugCommandDTO command in _commands)
             {
                 if (Keyboard.current[command.Key].wasPressedThisFrame)
                 {

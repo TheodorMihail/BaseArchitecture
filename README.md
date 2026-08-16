@@ -126,7 +126,7 @@ BaseArchitecture is installed as a **Unity package (UPM)** from this Git repo. T
 https://github.com/TheodorMihail/BaseArchitecture.git?path=/Assets/UnityPackages/BaseArchitecture
 ```
 
-Dependencies (Extenject, UniTask, Addressables, Newtonsoft Json, Input System) resolve automatically once the registry is set. Append a [release tag](https://github.com/TheodorMihail/BaseArchitecture/tags) such as `#v1.5.0` to the URL to pin a version. **DOTween** must be imported manually from the [Asset Store](http://dotween.demigiant.com/), since it drives the `SoundsManager` crossfade tweens.
+Dependencies (Extenject, UniTask, Addressables, Newtonsoft Json, Input System) resolve automatically once the registry is set. Append a [release tag](https://github.com/TheodorMihail/BaseArchitecture/tags) such as `#v1.5.1` to the URL to pin a version. **DOTween** must be imported manually from the [Asset Store](http://dotween.demigiant.com/), since it drives the `SoundsManager` crossfade tweens.
 
 **3. Enable the Input System**: set **Project Settings → Player → Active Input Handling** to **Input System Package** or **Both**. `DebugManager` polls `Keyboard.current`, which returns null while the project is on the legacy Input Manager only.
 

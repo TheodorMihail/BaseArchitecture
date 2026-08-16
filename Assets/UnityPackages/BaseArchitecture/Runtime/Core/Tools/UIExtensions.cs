@@ -18,7 +18,7 @@ namespace BaseArchitecture.Core
         /// </summary>
         public static async UniTask FadeToAsync(this CanvasGroup canvasGroup, float targetAlpha, float duration, CancellationTokenSource cancellationTokenSource)
         {
-            var tween = DOTween.To(() => canvasGroup.alpha, x => canvasGroup.alpha = x, targetAlpha, duration);
+            var tween = DOTween.To(() => canvasGroup.alpha, x => canvasGroup.alpha = x, targetAlpha, duration).SetEase(Ease.Linear);
             await tween.ToUniTask(cancellationToken: cancellationTokenSource.Token);
         }
 
@@ -35,7 +35,7 @@ namespace BaseArchitecture.Core
                     int number = Mathf.RoundToInt(countdownValue);
                     text.text = number.ToString();
                     onUpdate?.Invoke(number);
-                });
+                }).SetEase(Ease.Linear);
                 
             await tween.ToUniTask(cancellationToken: cancellationTokenSource.Token);
         }

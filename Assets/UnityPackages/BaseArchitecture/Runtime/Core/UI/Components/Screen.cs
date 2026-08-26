@@ -5,8 +5,7 @@ using Zenject;
 namespace BaseArchitecture.Core
 {
     /// <summary>
-    /// Interface for Screen components that manage the full MVC lifecycle.
-    /// Screens can be awaited to handle async UI flows and state transitions.
+    /// UI that can be awaited until it closes, which is how navigation is expressed.
     /// </summary>
     public interface IScreen : IUIComponent
     {
@@ -17,7 +16,7 @@ namespace BaseArchitecture.Core
     }
 
     /// <summary>
-    /// Screen interface that supports returning a result upon closure.
+    /// Screen that hands back a result when it closes.
     /// </summary>
     public interface IScreenWithResult<TResult> : IScreen
         where TResult : IScreenResult
@@ -32,9 +31,8 @@ namespace BaseArchitecture.Core
     public interface IScreenResult { }
 
     /// <summary>
-    /// Base Screen class that automatically creates and manages Model, View, and Controller.
-    /// View prefabs are loaded using the AddressablePathAttribute on the View class.
-    /// Provides async/await support for handling UI flows and state transitions.
+    /// Base Screen class. Creates and owns the Model, View and Controller, loading the View's prefab
+    /// from the address on its AddressablePathAttribute, and can be awaited until it closes.
     /// </summary>
     public abstract class Screen<M, V, C> : UIComponent<M, V, C>, IScreen
         where M : IModel

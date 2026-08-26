@@ -4,17 +4,15 @@ using Zenject;
 namespace BaseArchitecture.Core
 {
     /// <summary>
-    /// Interface for Controller components in the MVC pattern.
-    /// Controllers are initialized and disposed automatically by the framework.
+    /// Controller in the MVC pattern. Initialized and disposed by the framework.
     /// </summary>
     public interface IController : IInitializable, IDisposable
     {
     }
 
     /// <summary>
-    /// Base class for Controllers that orchestrate Model and View interactions.
-    /// Subscribe to View events in Initialize(), update Models based on user input,
-    /// and update Views based on Model changes. Unsubscribe from events in Dispose().
+    /// Base class for Controllers, which wire the View's events to the Model and back.
+    /// Subscriptions go in Initialize() and are undone in Dispose().
     /// </summary>
     public abstract class Controller<S, M, V> : IController
         where S : IUIComponent

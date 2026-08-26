@@ -7,8 +7,7 @@ using Zenject;
 namespace BaseArchitecture.Core
 {
     /// <summary>
-    /// Manages scene loading with async operations and lifecycle events.
-    /// Subscribe to OnSceneLoadStarted/OnSceneLoaded to react to scene transitions.
+    /// Async scene loading, raising events around the transition.
     /// </summary>
     public interface IScenesManager : IInitializable, IDisposable
     {

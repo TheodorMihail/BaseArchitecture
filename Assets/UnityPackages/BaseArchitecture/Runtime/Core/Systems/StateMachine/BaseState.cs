@@ -12,8 +12,8 @@ namespace BaseArchitecture.Core
     }
 
     /// <summary>
-    /// Base class for state machine states. Override OnEnter/OnUpdate/OnExit for state logic.
-    /// Call FinishState() with optional parameters to signal completion and trigger state transitions.
+    /// Base class for state machine states. A state runs until it calls FinishState, which is what
+    /// triggers the transition.
     /// </summary>
     public abstract class BaseState<T> : IState<T>
         where T : Enum
@@ -26,7 +26,7 @@ namespace BaseArchitecture.Core
         public virtual void OnExit() { }
 
         /// <summary>
-        /// Signals that this state has completed. Parameters are passed to the state machine's OnStateFinished handler.
+        /// Marks this state complete. The parameters reach the state machine's OnStateFinished.
         /// </summary>
         protected void FinishState(params object[] paramsList)
         {

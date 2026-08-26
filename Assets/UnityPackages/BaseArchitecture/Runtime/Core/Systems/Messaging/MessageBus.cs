@@ -5,8 +5,7 @@ using Zenject;
 namespace BaseArchitecture.Core
 {
     /// <summary>
-    /// Message bus interface for publish/subscribe messaging pattern.
-    /// Allows decoupled communication between systems using typed messages.
+    /// Typed publish/subscribe, so a publisher does not hold references to its subscribers.
     /// </summary>
     public interface IMessageBus : IInitializable, IDisposable
     {
@@ -16,8 +15,9 @@ namespace BaseArchitecture.Core
     }
 
     /// <summary>
-    /// Central message bus implementation for publish/subscribe pattern.
-    /// Enables decoupled communication between systems using typed messages.
+    /// Synchronous message bus. Dispatch snapshots the handler list first, so subscribing or
+    /// unsubscribing inside a handler is safe. There is no replay: a late subscriber misses
+    /// anything already published.
     /// </summary>
     public class MessageBus : IMessageBus
     {
@@ -70,8 +70,8 @@ namespace BaseArchitecture.Core
             if (!_subscribers.ContainsKey(messageType))
                 return;
 
-            // Snapshot before dispatch so Subscribe/Unsubscribe calls from within
-            // handlers don't corrupt iteration or cause double-invocations.
+            // Snapshot before dispatch, so a handler that subscribes or unsubscribes cannot break
+            // the iteration or be invoked twice.
             var snapshot = new List<object>(_subscribers[messageType]);
 
             foreach (var handler in snapshot)

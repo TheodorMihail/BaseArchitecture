@@ -6,20 +6,17 @@ using Zenject;
 namespace BaseArchitecture.Core
 {
     /// <summary>
-    /// Generic object pooling system for reusing GameObjects/Components.
-    /// Reduces garbage collection and instantiation overhead.
+    /// Reuses components instead of instantiating and destroying them. Pools are keyed per prefab.
     /// </summary>
     public interface IObjectPooling: IDisposable
     {
         /// <summary>
-        /// Gets an instance from the pool or creates a new one if pool is empty.
-        /// Automatically calls OnSpawned() on the IPoolableObject instance.
+        /// Takes an instance from the pool, creating one if it is empty, and calls OnSpawned on it.
         /// </summary>
         T Get<T>(T prefab, Transform parent = null) where T : MonoBehaviour, IPoolableObject;
 
         /// <summary>
-        /// Returns an instance to the pool for later reuse.
-        /// Automatically calls OnDespawned() on the IPoolableObject instance.
+        /// Returns an instance to the pool and calls OnDespawned on it.
         /// </summary>
         void Return<T>(T instance) where T : MonoBehaviour, IPoolableObject;
 
@@ -34,7 +31,7 @@ namespace BaseArchitecture.Core
         void ClearPool<T>(T prefab) where T : MonoBehaviour, IPoolableObject;
 
         /// <summary>
-        /// Pre-warms a pool by creating instances in advance.
+        /// Creates instances up front, so the first use does not pay for them.
         /// </summary>
         void Prewarm<T>(T prefab, int count, Transform parent = null) where T : MonoBehaviour, IPoolableObject;
     }

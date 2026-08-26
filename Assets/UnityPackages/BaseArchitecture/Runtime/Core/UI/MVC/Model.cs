@@ -1,16 +1,14 @@
 namespace BaseArchitecture.Core
 {
     /// <summary>
-    /// Interface for Model components in the MVC pattern.
-    /// Models represent the data and business logic layer.
+    /// Model in the MVC pattern: the data layer.
     /// </summary>
     public interface IModel
     {
     }
 
     /// <summary>
-    /// Models implementing this interface can receive typed parameters during initialization.
-    /// The framework automatically passes parameters when available.
+    /// Model that takes typed parameters on initialization, passed when available.
     /// </summary>
     public interface IModelWithParams<TParam> : IModel
     {
@@ -18,9 +16,8 @@ namespace BaseArchitecture.Core
     }
 
     /// <summary>
-    /// Base class for Models that hold state and business logic.
-    /// Models should not reference Views or Unity-specific components.
-    /// Keep Models framework-agnostic for better testability.
+    /// Base class for Models. A Model references no View and nothing Unity-specific, which is what
+    /// keeps it testable.
     /// </summary>
     public abstract class Model : IModel
     {

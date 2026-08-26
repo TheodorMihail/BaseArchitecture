@@ -5,24 +5,23 @@ using Zenject;
 namespace BaseArchitecture.Core
 {
     /// <summary>
-    /// Interface for View components in the MVC pattern.
-    /// Views handle UI presentation and forward user input to Controllers via events.
+    /// View in the MVC pattern: presentation, raising events for the Controller to handle.
     /// </summary>
     public interface IView : IInitializable
     {
     }
 
     /// <summary>
-    /// Base class for MVC Views that represent UI elements.
-    /// Views are MonoBehaviours instantiated from prefabs and should contain minimal logic.
-    /// Use events to communicate with Controllers rather than direct method calls.
+    /// Base class for Views, which are MonoBehaviours instantiated from a prefab. Communication with
+    /// the Controller is by event rather than direct calls.
     /// </summary>
     public abstract class View : MonoBehaviour, IView
     {
         public virtual void Initialize() { }
     }
 
-    /// <summary>Opt-in View base for screens that query their Model on demand instead of receiving pushed data. Controller{S,M,V} sets the Model before Initialize() runs.</summary>
+    /// <summary>View that queries its Model on demand instead of being handed pushed values. The
+    /// Controller sets the Model before Initialize() runs.</summary>
     public abstract class View<TModel> : View where TModel : IModel
     {
         protected TModel _model;
@@ -34,8 +33,7 @@ namespace BaseArchitecture.Core
     }
 
     /// <summary>
-    /// Attribute that specifies the Addressables path for a View prefab.
-    /// Applied to View classes to enable automatic loading from Addressables.
+    /// The Addressables path a View's prefab is loaded from.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
     public sealed class AddressablePathAttribute : Attribute

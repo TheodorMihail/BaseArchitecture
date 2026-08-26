@@ -4,8 +4,7 @@ using Zenject;
 namespace BaseArchitecture.Core
 {
     /// <summary>
-    /// Interface for HUD components that manage persistent UI.
-    /// Unlike Screens, HUDs don't block execution and remain visible until explicitly hidden.
+    /// Persistent UI. Unlike a Screen, showing a HUD does not block, and it stays until closed.
     /// </summary>
     public interface IHUD : IUIComponent
     {
@@ -14,9 +13,8 @@ namespace BaseArchitecture.Core
     }
 
     /// <summary>
-    /// Base HUD class that automatically creates and manages Model, View, and Controller.
-    /// HUDs are persistent UI elements that don't block execution flow.
-    /// View prefabs are loaded using the AddressablePathAttribute on the View class.
+    /// Base HUD class. Creates and owns the Model, View and Controller, loading the View's prefab
+    /// from the address on its AddressablePathAttribute.
     /// </summary>
     public abstract class HUD<M, V, C> : UIComponent<M, V, C>, IHUD
         where M : IModel

@@ -9,9 +9,8 @@ using Zenject;
 namespace BaseArchitecture.Core
 {
     /// <summary>
-    /// Wrapper for Unity Addressables system. Loads prefabs asynchronously by their addressable path.
-    /// Each address is loaded at most once; handles are released on Dispose.
-    /// Returns null if loading fails - check logs for error details.
+    /// Loads prefabs asynchronously by addressable path. Each address is loaded at most once and its
+    /// handle is released on Dispose. A failed load returns null and logs the reason.
     /// </summary>
     public interface IAddressablesManager : IInitializable, IDisposable
     {

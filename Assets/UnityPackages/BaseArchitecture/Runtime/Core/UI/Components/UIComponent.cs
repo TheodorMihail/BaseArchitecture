@@ -7,8 +7,7 @@ using Zenject;
 namespace BaseArchitecture.Core
 {
     /// <summary>
-    /// Base interface for all UI components (Screens and HUDs).
-    /// Provides common lifecycle management.
+    /// Shared lifecycle for Screens and HUDs.
     /// </summary>
     public interface IUIComponent : IInitializable, IDisposable
     {
@@ -25,8 +24,8 @@ namespace BaseArchitecture.Core
     }
 
     /// <summary>
-    /// Base abstract class for all UI components that manages MVC lifecycle.
-    /// Handles automatic prefab loading, MVC instantiation, and error handling.
+    /// Base class for Screens and HUDs: loads the View's prefab, builds the MVC trio and owns their
+    /// lifecycle.
     /// </summary>
     public abstract class UIComponent<M, V, C> : IUIComponent
         where M : IModel
@@ -89,7 +88,7 @@ namespace BaseArchitecture.Core
         }
 
         /// <summary>
-        /// Creates Model, View, and Controller instances with automatic prefab loading.
+        /// Loads the View's prefab and creates the Model, View and Controller.
         /// </summary>
         protected async UniTask CreateMVC()
         {
@@ -116,7 +115,7 @@ namespace BaseArchitecture.Core
         }
 
         /// <summary>
-        /// Called when MVC loading fails. Override to provide custom failure handling.
+        /// Called when the MVC trio could not be created.
         /// </summary>
         protected virtual void OnLoadFailed(string error)
         {
@@ -125,8 +124,7 @@ namespace BaseArchitecture.Core
         }
 
         /// <summary>
-        /// Called after MVC components are created and ready.
-        /// Override to perform custom initialization logic.
+        /// Called once the Model, View and Controller are created and ready.
         /// </summary>
         protected virtual void MVCCreated()
         {

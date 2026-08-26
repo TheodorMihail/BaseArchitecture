@@ -12,10 +12,26 @@ namespace BaseArchitecture.Core
     {
     }
 
+    /// <summary>
+    /// Save data that carries the version it was written with, so a build can discard data it can no
+    /// longer read. Opt-in: plain ISaveData is loaded with Load and is never version checked.
+    /// </summary>
+    public interface IVersionedSaveData : ISaveData
+    {
+        /// <summary>The version the stored data was written with. 0 means it predates versioning.</summary>
+        int Version { get; set; }
+    }
+
     public interface IPersistenceManager
     {
         bool Exists(string key);
         T Load<T>(string key) where T : class, ISaveData, new();
+
+        /// <summary>
+        /// Loads data, replacing it with an empty instance when the stored version differs from the
+        /// one this build writes. Each key is versioned on its own, so discarding one leaves the rest.
+        /// </summary>
+        T LoadVersioned<T>(string key, int currentVersion) where T : class, IVersionedSaveData, new();
         void Save<T>(string key, T data) where T : class, ISaveData;
         void Delete(string key);
     }
@@ -42,6 +58,30 @@ namespace BaseArchitecture.Core
         public T Load<T>(string key) where T : class, ISaveData, new()
         {
             return _entries.TryGetValue(key, out string json) ? JsonConvert.DeserializeObject<T>(json) : new T();
+        }
+
+        /// <remarks>A member missing from the stored JSON keeps its default, so data written before
+        /// the version field existed loads as version 0. Leave a type's current version at 0 until its
+        /// contents stop being usable and such data is still accepted.</remarks>
+        public T LoadVersioned<T>(string key, int currentVersion) where T : class, IVersionedSaveData, new()
+        {
+            T data = Load<T>(key);
+
+            if (data.Version == currentVersion)
+            {
+                return data;
+            }
+
+            // Nothing stored means nothing was discarded, so only a real replacement is reported.
+            if (Exists(key))
+            {
+                data.LogWarning($"Discarding save data written by version {data.Version}, this build expects {currentVersion}.");
+            }
+
+            var replacement = new T { Version = currentVersion };
+            Save(key, replacement);
+
+            return replacement;
         }
 
         public void Save<T>(string key, T data) where T : class, ISaveData

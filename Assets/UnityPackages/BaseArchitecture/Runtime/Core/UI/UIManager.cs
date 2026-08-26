@@ -15,10 +15,10 @@ namespace BaseArchitecture.Core
     }
 
     /// <summary>
-    /// Manages UI screen and HUD lifecycle and presentation.
-    /// Supports screens with return values and typed parameters.
-    /// HUDs are persistent UI elements that return immediately.
-    /// Update the DI container in scene installers to enable UI instantiation in that context.
+    /// Shows and closes Screens and HUDs. Showing a Screen can be awaited and can return a result;
+    /// showing a HUD returns immediately.
+    /// ⚠ It holds a container reference, so every scene installer must call UpdateDIContainer. Without
+    /// that, anything shown after a scene load resolves against the previous scene's container.
     /// </summary>
     public interface IUIManager : IInitializable, IDisposable
     {

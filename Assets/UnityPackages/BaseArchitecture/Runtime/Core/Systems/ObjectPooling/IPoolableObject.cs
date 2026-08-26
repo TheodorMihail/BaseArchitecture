@@ -1,20 +1,19 @@
 namespace BaseArchitecture.Core
 {
     /// <summary>
-    /// Interface for objects that can be managed by an object pool.
-    /// Implement this on MonoBehaviours that will be spawned/despawned frequently.
+    /// An object the pool can hand out and take back.
     /// </summary>
     public interface IPoolableObject
     {
         /// <summary>
-        /// Called when the object is taken from the pool and made active.
-        /// Use this to reset state, enable components, etc.
+        /// Called when the object is taken from the pool and activated. A pooled instance carries the
+        /// state it had when it went back, so anything per-use is reset here.
         /// </summary>
         void OnSpawned();
 
         /// <summary>
-        /// Called when the object is returned to the pool and deactivated.
-        /// Use this to clean up, disable components, unsubscribe from events, etc.
+        /// Called when the object is returned to the pool and deactivated. Event subscriptions are
+        /// dropped here, since the instance outlives this use.
         /// </summary>
         void OnDespawned();
     }

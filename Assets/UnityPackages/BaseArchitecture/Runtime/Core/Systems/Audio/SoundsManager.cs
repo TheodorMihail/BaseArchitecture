@@ -37,7 +37,10 @@ namespace BaseArchitecture.Core
         void SetMuted(bool muted);
     }
 
-    public class SoundsManager : ISoundsManager
+    /// <summary>
+    /// Where the settings are stored is the deriving game's decision, so this owns playback only.
+    /// </summary>
+    public abstract class SoundsManager : ISoundsManager
     {
         /// <summary>Two sources per channel, so an incoming loop can fade in while the previous one
         /// fades out.</summary>
@@ -49,8 +52,6 @@ namespace BaseArchitecture.Core
             public Tween FadeTween;
         }
 
-        [Inject] private readonly IPersistenceManager _persistenceManager;
-
         private SoundsSaveData _data;
         private GameObject _root;
         private readonly Dictionary<string, AudioSource> _oneShotSources = new();
@@ -58,9 +59,17 @@ namespace BaseArchitecture.Core
 
         public bool IsMuted => _data.Muted;
 
-        public void Initialize()
+        /// <summary>Load the settings, then hand them to InitializeWithSettings.</summary>
+        public abstract void Initialize();
+
+        /// <summary>Persists the settings after a volume or mute change.</summary>
+        protected abstract void SaveSettings(SoundsSaveData settings);
+
+        /// <summary>Adopts the stored settings and builds the audio root. Nothing else here works
+        /// until it has run.</summary>
+        protected void InitializeWithSettings(SoundsSaveData settings)
         {
-            _data = _persistenceManager.Load<SoundsSaveData>(SoundsSaveData.SaveKey);
+            _data = settings;
             _root = new GameObject(nameof(SoundsManager));
             Object.DontDestroyOnLoad(_root);
         }
@@ -167,7 +176,7 @@ namespace BaseArchitecture.Core
         public void SetChannelVolume(string channel, float volume)
         {
             _data.ChannelVolumes[channel] = volume;
-            _persistenceManager.Save(SoundsSaveData.SaveKey, _data);
+            SaveSettings(_data);
 
             if (_loopChannels.TryGetValue(channel, out var loopChannel))
             {
@@ -178,7 +187,7 @@ namespace BaseArchitecture.Core
         public void SetMuted(bool muted)
         {
             _data.Muted = muted;
-            _persistenceManager.Save(SoundsSaveData.SaveKey, _data);
+            SaveSettings(_data);
 
             foreach (var pair in _loopChannels)
             {
